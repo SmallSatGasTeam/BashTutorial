@@ -989,7 +989,7 @@ view_plotter_py_epilogue() {
 	and $(_GitLab)!
 
 	Notice that $(_GitLab) displays this $(_py Python) file with syntax highlighting.
-	$(_GitLab) does this automatically for the dozens of programming langauges
+	$(_GitLab) does this automatically for the dozens of programming languages
 	that it recognizes.  This file got this special treatment because its
 	name ends in $(_py .py).
 
