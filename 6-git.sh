@@ -1628,7 +1628,7 @@ git_remote_add_prologue() {
 	  * Replace $(cyn erik.falor) with your $(bld GitLab username) (case does not matter)
 	    * Your $(bld GitLab username) is most likely your $(bld A Number)
 	  * Replace $(cyn falor-erik) with your $(bld real name) (again, case does not matter)
-	    * To make things easy on your grader, use your Canvas $(bld prefered name)
+	    * To make things easy on your grader, use your Canvas $(bld preferred name)
 
 	:
 
