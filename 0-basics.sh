@@ -1302,10 +1302,11 @@ command_not_found_prologue() {
 }
 
 command_not_found_test() {
+	_SOMETHING_ELSE=99
 	if   _tutr_noop; then return $NOOP
-	elif (( _RES == 0 )); then return $WRONG_CMD
 	elif (( _RES == 127 )); then return 0
-	else return 99
+	elif (( _RES == 0 )); then return $WRONG_CMD
+	else return $_SOMETHING_ELSE
 	fi
 }
 
@@ -1316,6 +1317,15 @@ command_not_found_hint() {
 			$(cmd ${_CMD[0]}) was a valid command.
 
 			C'mon, you can screw up better than that!
+			:
+			;;
+		$_SOMETHING_ELSE)
+			cat <<-:
+			$(bld Congratulations)!  You found anther way to fail besides spelling
+			a command name incorrectly.
+
+			But, for this last step of the tutorial, I really must insist that you
+			fail $(bld my) way.
 			:
 			;;
 		*)
