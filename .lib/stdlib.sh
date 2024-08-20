@@ -1,11 +1,18 @@
 # vim: set expandtab tabstop=4 shiftwidth=4:
 
+# Contact for bug reports
+typeset -r _EMAIL=$'\x1b[1;36merik.falor@usu.edu\x1b[0m'
 
 # Exit code indicating the lesson was completed successfully
 typeset -r _COMPLETE=7
 
-# Contact for bug reports
-typeset -r _EMAIL=$'\x1b[1;36merik.falor@usu.edu\x1b[0m'
+# *_test() status code for commands that are neither correct nor incorrect
+typeset -r NOOP=7
+
+# Count number of moves taken so far to solve the current step
+typeset -i _TOTAL_ATTEMPTS=0
+typeset -i _NOOP_ATTEMPTS=0
+typeset -i _ATTEMPTS=0
 
 
 # This function is run *BEFORE* a command.
@@ -59,12 +66,14 @@ _tutr_precmd() {
         $_TEST
         _TEST_RES=$?
         if [[ $_TEST_RES == 0 ]]; then
-
             [[ -n $DEBUG ]] && printf "\nDEBUG| precmd(): \x1b[1;32m$_TEST passed\x1b[0m\n"
 
             # Run this step's _post and _epilogue functions, if extant
             _tutr_has_function $_POST && $_POST
             _tutr_has_function $_EPILOGUE && _tutr_info $_EPILOGUE
+
+            # Reset the move counters
+            (( _TOTAL_ATTEMPTS = _NOOP_ATTEMPTS = _ATTEMPTS = 0 ))
 
             # Clear the command line before running the next test
             # Some steps are completed based upon the state of the system,
@@ -77,8 +86,11 @@ _tutr_precmd() {
             # Move onto the next step and run its tests
             _tutr_next_step
         else
+            (( _TOTAL_ATTEMPTS++ ))
+            (( _TEST_RES == NOOP && _NOOP_ATTEMPTS++ ))
+            (( _ATTEMPTS = _TOTAL_ATTEMPTS - _NOOP_ATTEMPTS ))
             _tutr_info $_HINT $_TEST_RES
-            [[ -n $DEBUG ]] && printf "\nDEBUG| precmd(): \x1b[1;31m$_TEST failed\x1b[0m\n"
+            [[ -n $DEBUG ]] && printf "\nDEBUG| precmd(): \x1b[1;31m$_TEST failed with status $_TEST_RES\x1b[0m\n"
         fi
     fi
 
@@ -502,7 +514,7 @@ _tutr_next_step() {
         fi
 
         # If there wasn't a step specific statelog, check if there's a global lesson statelog
-        if ! _tutr_has_function $_STATELOG; then
+        if [[ -z $DISABLE_TUTR_LOGR ]] && ! _tutr_has_function $_STATELOG; then
             _tutr_has_function _tutr_lesson_statelog_global \
                 && _STATELOG=_tutr_lesson_statelog_global
         fi

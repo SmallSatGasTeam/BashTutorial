@@ -88,7 +88,7 @@ _origin_not_eriks() {
 	(( $# != 1 )) && _tutr_die echo Usage: _origin_not_eriks DIRECTORY
 	( # create a sub shell to not leave the tutorial in the wrong PWD
 		cd "$1"
-		[[ $(git remote get-url origin) != *erik.falor* ]]
+		[[ $(git remote get-url origin) != *duckiecorp* ]]
 	)
 }
 
@@ -218,14 +218,14 @@ rename_repo_test() {
 		_SRC=${_CMD[2]}
 		return $_INCORRECT_DEST
 	elif [[ "$PWD" != "$_PARENT" ]]; then return $WRONG_PWD
-	elif _tutr_noop cd; then return $PASS
+	elif _tutr_noop cd; then return $NOOP
 	else _tutr_generic_test -c mv -a "$_SRC|$_SRC/" -a "$_REPONAME|$_REPONAME/"
 	fi
 }
 
 rename_repo_hint() {
 	case $1 in
-		$PASS) ;;
+		$NOOP) ;;
 		$WRONG_PWD) _tutr_minimal_chdir_hint "$_PARENT" ;;
 		$_TARGET_IS_NOT_GIT_REPO)
 			cat <<-:
@@ -601,7 +601,7 @@ edit_readme_test() {
 	elif (( backtick_fences % 2 != 0 )); then return $_UNBALANCED_BACKTICKS
 	elif (( tilde_fences % 2 != 0 )); then return $_UNBALANCED_TILDES
 	elif (( ( need_h1 & need_h2 & need_bold & need_blist & need_inline ) == 0)); then return 0
-	elif _tutr_noop; then return $PASS
+	elif _tutr_noop; then return $NOOP
 	else _tutr_generic_test -c nano -a README.md -d "$_REPO"
 	fi
 }
@@ -1501,10 +1501,7 @@ edit_plan_md1_test() {
 	_tutr_file_clean doc/Plan.md && [[ $_COMMIT == $_NEW_COMMIT ]] && return $_CLEAN
 	_tutr_file_unstaged doc/Plan.md && return $_UNSTAGED
 	_tutr_file_staged   doc/Plan.md && return $_STAGED
-
-	_tutr_branch_ahead_count
-	local count=$?
-	(( count >= 2 )) && return 0
+	_tutr_branch_ahead && (( REPLY >= 2 )) && return 0
 
 	return $_ENCOURAGEMENT
 }
@@ -1622,10 +1619,7 @@ edit_signature_md_test() {
 	_tutr_file_clean doc/Signature.md && [[ $_COMMIT == $_NEW_COMMIT ]] && return $_CLEAN
 	_tutr_file_unstaged doc/Signature.md && return $_UNSTAGED
 	_tutr_file_staged   doc/Signature.md && return $_STAGED
-
-	_tutr_branch_ahead_count
-	local count=$?
-	(( count >= 3 )) && return 0
+	_tutr_branch_ahead && (( REPLY >= 3 )) && return 0
 
 	return $_ENCOURAGEMENT
 }

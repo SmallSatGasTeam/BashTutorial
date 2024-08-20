@@ -628,7 +628,7 @@ cat_GENERIC_test() {
 		[[ ${_CMD[1]} == corrupt_terminal ]] && return $_CORRUPTED
 		return $WRONG_ARGS
 	fi
-	_tutr_noop && return $PASS
+	_tutr_noop && return $NOOP
 	_tutr_generic_test -c cat -a $1
 }
 
@@ -638,7 +638,7 @@ cat_GENERIC_test() {
 # Usage: cat_GENERIC_hint status_code filename
 cat_GENERIC_hint() {
 	case $1 in
-		$PASS)
+		$NOOP)
 			return
 			;;
 
@@ -1168,13 +1168,13 @@ cat_nofile_test() {
 		return $_FOUND_FILE
 	fi
 	_tutr_damlev "${_CMD[0]}" cat 2 && return $MISSPELD_CMD
-	_tutr_noop && return $PASS
+	_tutr_noop && return $NOOP
 	return $WRONG_CMD
 }
 
 cat_nofile_hint() {
 	case $1 in
-		$PASS)
+		$NOOP)
 			return
 			;;
 		$_FOUND_FILE)
@@ -1272,7 +1272,7 @@ command_not_found_prologue() {
 }
 
 command_not_found_test() {
-	if   _tutr_noop; then return $PASS
+	if   _tutr_noop; then return $NOOP
 	elif (( _RES == 0 )); then return $WRONG_CMD
 	elif (( _RES == 127 )); then return 0
 	else return 99

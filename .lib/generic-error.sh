@@ -1,14 +1,25 @@
 # Enumerate every way a step can go wrong
-typeset -r WRONG_PWD=1
-typeset -r WRONG_CMD=2
-typeset -r MISSPELD_CMD=3
-typeset -r WRONG_ARGS=4
-typeset -r TOO_FEW_ARGS=5
-typeset -r TOO_MANY_ARGS=6
-typeset -r PASS=7
-typeset -r STATUS_FAIL=8
-typeset -r STATUS_WIN=9
+# Status=1 is reserved because it's the default return value of a failed
+# comparison expression, and may occur when a test function falls through.
+#
+# WRONG_PWD was once = 1, and this led to many spurious reports of being
+# in the wrong directory.
+typeset -r WRONG_PWD=2
+typeset -r WRONG_CMD=3
+typeset -r MISSPELD_CMD=4
+typeset -r WRONG_ARGS=5
+typeset -r TOO_FEW_ARGS=6
+# typeset -r NOOP=7  # defined in stdlib.sh
+typeset -r TOO_MANY_ARGS=8
+typeset -r STATUS_FAIL=9
+typeset -r STATUS_WIN=10
 
+# Test whether this computer has a case-insensitive filesystem
+if which LS 2>/dev/null 1>/dev/null; then
+    typeset -r _CI_FS=yes
+else
+    typeset -r _CI_FS=no
+fi
 
 # provides spell checking function _tutr_damlev
 source damlev.sh
@@ -212,10 +223,13 @@ _tutr_minimal_chdir_hint() {
 #
 #  Validate 'systemctl restart' considering typos with Lev. dist. between [1,3]
 #    _tutr_generic_test -c systemctl -a restart -l 3
-
+#
 # TODO: when the user gives an argument with a trailing '/' this command
 #       regards it as wrong, even though in most cases it works just fine
 #       Use a regex to cope with this
+#
+# TODO: filenames on macOS and Windows may be given to the shell without regard to case;
+#       this function only accepts matching case even when the OS reports success.
 _tutr_generic_test() {
 	local -a _A=( cmd )
 	local _C= _D= _X=
@@ -277,6 +291,16 @@ _tutr_generic_test() {
 	[[ -n "$_D" && "$PWD" != "$_D" ]] && return $WRONG_PWD
 
 	# if command is spelled correctly...
+	# TODO: adjust the value of the 'nocasematch' shell option to match the prevailing OS
+	#       MacOS + Windows = CaSe InSeNsItIvE
+	#       Linux = Case Sensitive
+	#
+	#       Zsh: setopt local_options (no)casematch
+	#       Bash: local orig_nocasematch=$(shopt -p nocasematch)
+	#             shopt -s nocasematch
+	#             ...
+	#             $orig_nocasematch
+	#             return ...
 	if [[ ${_CMD[0]} =~ ^$_C$ ]]; then
 
 		if (( _N > 0 )); then
@@ -335,10 +359,10 @@ _tutr_generic_hint() {
 		$TOO_MANY_ARGS) echo "You ran ${_g}$2${_z} with too many arguments" ;;
         $WRONG_ARGS)    echo "${_g}$2${_z} got the wrong argument(s)" ;;
 		$WRONG_PWD)     _tutr_minimal_chdir_hint "$3" ;;
-        $PASS)          : ;;
+        $NOOP)          : ;;
 		$STATUS_FAIL)   echo "${_g}$2${_z} failed unexpectedly" ;;
 		$STATUS_WIN)    echo "${_g}$2${_z} succeeded when it should have failed" ;;
-		*)              printf "_tutr_generic_hint(): Why are we here? CMD=${_g}%s${_z} \$1=%s\n\n" ${_CMD[@]} $1 ;;
+		*)              printf "_tutr_generic_hint(): Why do we have status code ${_m}%s${_z}? CMD=${_g}%s${_z} \$1=%s\n\n" $1 ${_CMD[@]} ;;
 	esac
 }
 

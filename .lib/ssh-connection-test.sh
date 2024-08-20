@@ -1,6 +1,8 @@
 typeset -r _GL=gitlab.cs.usu.edu
 typeset -r _GL_HOSTKEY_ED25519=SHA256:tIjwsWWEm+4NppPonV2Fkqe252DJqLWEJ5ygaAHbs2o
 typeset -r _GL_HOSTKEY_ECDSA=SHA256:4x+G97yflra4K2KWnF19ZNrZGL1iqjQaq8HVwu/mX6U
+typeset -r _HTTPS_GITLAB_KEYS=https://$_GL/-/profile/keys
+export _GL_USERNAME
 
 
 # TODO v2.0: when an SSH key already exists, offer to
@@ -9,19 +11,20 @@ typeset -r _GL_HOSTKEY_ECDSA=SHA256:4x+G97yflra4K2KWnF19ZNrZGL1iqjQaq8HVwu/mX6U
 #   c)  start the lesson without creating new keys
 _ssh_key_exists_msg() {
 	cat <<-MSG
-	I found an SSH key named $(path $(basename $1)) under $(path ~/.ssh).
+	I found an SSH key named $(path $(basename $1)) under $(path ~/.ssh),
+	but was unable to login to GitLab.
 
-	  * If you proceed with the lesson, you will skip over the step that
-	    creates a new SSH key.
+	${_Y} 8 8 8 8               ,ooo.    ${_Z}Re-create your key with $(cmd ssh-keygen), add
+	${_Y} 8a8 8a8              oP   ?b   ${_Z}add it to your GitLab profile on
+	${_Y}d888a888zzzzzzzzzzzzzz8     8b  ${_C}${_u}$_HTTPS_GITLAB_KEYS${_Z},
+	${_Y} '""^""'              ?o___oP'  ${_Z}then restart this lesson.
 
-	  * If you would like to re-generate your SSH key under the tutorial's
-	    guidance, exit this lesson, delete these files and start over again:
+	Contact $_EMAIL if you need assistance.
 
-	  $(path $1)
-	  $(path $1.pub)
+	${_W}Original error message:
+	${_Z}$@
 
 	MSG
-	_tutr_pressenter
 }
 
 
@@ -91,6 +94,25 @@ _tutr_ssh_key_is_present() {
 	fi
 	REPLY=
 	return 1
+}
+
+
+_unable_to_determine_username() {
+	cat <<-MSG
+
+	${_Y}     .-""""""-.      ${_Z}
+	${_Y}   .'          '.    ${_Z}
+	${_Y}  /   ${_W}O      O   ${_Y}\   ${_Z} I was unable to determine your username on GitLab
+	${_Y} :           ${_B}'   ${_Y} :  ${_Z}
+	${_Y} |                |  ${_Z} Please send this error message along with the
+	${_Y} :    .------.    :  ${_Z} output of running $(cmd ./bug-report.sh) to
+	${_Y}  \  '        ' ${_Y} /   ${_Z} $_EMAIL
+	${_Y}   '.          .${_Y}'    ${_Z}
+	jgs${_Y}  '-......-'      ${_Z}
+
+	${_W}Original error message:
+	${_Z}$@
+	MSG
 }
 
 
@@ -216,10 +238,9 @@ _tutr_assert_ssh_connection_is_okay() {
 
 	case $stat in
 		0)
-			if [[ $msg == "Welcome to GitLab"* ]]; then
-				export _GL_USERNAME=${msg:20:-1}
-			else
-				export _GL_USERNAME=
+			if [[ $msg == *"Welcome to GitLab, @"* ]]; then
+				_GL_USERNAME=${msg##*@}
+				_GL_USERNAME=${_GL_USERNAME:0:-1}
 			fi
 			;;
 		255)
@@ -228,7 +249,7 @@ _tutr_assert_ssh_connection_is_okay() {
 				# the SSH key is not on GitLab.
 				# See if there is a local SSH key
 				if _tutr_ssh_key_is_present; then
-					_tutr_warn _ssh_key_exists_msg $REPLY
+					_tutr_die _ssh_key_exists_msg $REPLY
 				fi
 			elif [[ $msg == *"Could not resolve hostname"* ]]; then
 				# DNS is down
@@ -248,12 +269,17 @@ _tutr_assert_ssh_connection_is_okay() {
 			;;
 		*)
 			if _tutr_ssh_key_is_present; then
-				_tutr_warn _ssh_key_exists_msg $REPLY
+				_tutr_die _ssh_key_exists_msg $REPLY
 			else
 				_tutr_die _ssh_key_is_missing_msg
 			fi
 			;;
 	esac
+
+	if [[ -z "$_GL_USERNAME" ]]; then
+		_tutr_die _unable_to_determine_username "'$msg'"
+	fi
+
 	[[ -n $DEBUG ]] && set +x
 	return 0
 }

@@ -26,6 +26,7 @@ give me context.  Include the diagnostic text below the line.
 Thanks in advance!
 _________________________________________________________________________
 
+TUTR_REVISION=$(git describe --always --dirty)
 PWD=$PWD
 HOME=$HOME
 PATH=$PATH

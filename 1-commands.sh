@@ -32,7 +32,7 @@ _man_not_found() {
 
 			If this error persists, contact $_EMAIL
 			MNF
-_tutr_open 'https://gitlab.cs.usu.edu/erik.falor/shell-tutor#installing-the-unix-manual'
+			_tutr_open 'https://gitlab.cs.usu.edu/duckiecorp/shell-tutor#installing-the-unix-manual'
 			;;
 		*)
 		cat <<-MNF
@@ -54,7 +54,7 @@ setup() {
 	[[ -d "$_BASE" ]] && rm -rf "$_BASE"
 	mkdir -p "$_BASE"
 
-	export EFILE=Elegant
+	export EFILE=elegant
 	cat <<-TEXT > "$_BASE/$EFILE"
 		elegant: adj.
 		
@@ -74,7 +74,7 @@ setup() {
 	TEXT
 	touch -t 197311170853 "$_BASE/$EFILE"
 
-	export MFILE=Menuitis
+	export MFILE=menuitis
 	cat <<-TEXT > "$_BASE/$MFILE"
 		menuitis: /men'yoo-i:-tis/, n.
 		
@@ -93,7 +93,7 @@ setup() {
 	TEXT
 	touch -t 199108250527 "$_BASE/$MFILE"
 
-	export IFILE=Indent-Style
+	export IFILE=indent-style
 	cat <<-TEXT > "$_BASE/$IFILE"
 		indent style: n.
 		
@@ -174,7 +174,7 @@ setup() {
 	TEXT
 	touch -t 200103241305 "$_BASE/$IFILE"
 
-	export TFILE=TTY
+	export TFILE=tty
 	cat <<-TEXT > "$_BASE/$TFILE"
 		tty: /T-T-Y/, /tit-ee/, n.
 		
@@ -199,7 +199,7 @@ setup() {
 
 	TEXT
 
-	export SFILE=Spaghetti-Code
+	export SFILE=spaghetti-code
 	cat <<-TEXT > "$_BASE/$SFILE"
 		spaghetti code: n.
 
@@ -213,6 +213,7 @@ setup() {
 	TEXT
 	touch -t 197111031402 "$_BASE/$SFILE"
 
+	export MISSING_FILE=black-art
 
 	export _LESS_KEYS="* Press $(kbd q) or $(kbd Q) to quit
 * Press $(kbd j) or $(kbd Down Arrow) to scroll down by one line
@@ -302,12 +303,12 @@ echo_prologue() {
 	of files.  Run $(cmd echo) with these arguments: the names of two files, and
 	one word that is not a file
 
-	  $(cmd echo Elegant Spaghetti-Code Black-Art)
+	  $(cmd echo $EFILE $SFILE $MISSING_FILE)
 	:
 }
 
 echo_test() {
-	_tutr_generic_test -c echo -a Elegant -a Spaghetti-Code -a ".*"
+	_tutr_generic_test -c echo -a $EFILE -a $SFILE -a ".*"
 }
 
 echo_hint() {
@@ -324,13 +325,13 @@ cat_es_prologue() {
 	cat <<-:
 	Likewise, you can give $(cmd cat) multiple arguments.
 
-	$(cmd cat) the names of those two files, $(path Elegant) and $(path Spaghetti-Code),
-	along with the non-file $(cmd Black-Art)
+	$(cmd cat) the names of those two files, $(path $EFILE) and $(path $SFILE),
+	along with the non-file $(cmd $MISSING_FILE)
 	:
 }
 
 cat_es_test() {
-	_tutr_generic_test -f -c cat -a Elegant -a Spaghetti-Code -a Black-Art -d "$_BASE"
+	_tutr_generic_test -f -c cat -a $EFILE -a $SFILE -a $MISSING_FILE -d "$_BASE"
 }
 
 cat_es_hint() {
@@ -370,12 +371,12 @@ cat_mmm_prologue() {
 	You can $(cmd cat) the same filename over and over again.  The result looks
 	like one long file.
 
-	Repeat the file $(path Menuitis) three times
+	Repeat the file $(path $MFILE) three times
 	:
 }
 
 cat_mmm_test() {
-	_tutr_generic_test -c cat -a Menuitis -a Menuitis -a Menuitis -d "$_BASE"
+	_tutr_generic_test -c cat -a $MFILE -a $MFILE -a $MFILE -d "$_BASE"
 }
 
 cat_mmm_hint() {
@@ -396,12 +397,12 @@ cat_emts_prologue() {
 	cat <<-:
 	Let's try that again, but with a different mix of filenames:
 
-	  $(cmd cat Spaghetti-Code Menuitis TTY Elegant)
+	  $(cmd cat $SFILE $MFILE $TFILE $EFILE)
 	:
 }
 
 cat_emts_test() {
-	_tutr_generic_test -c  cat -a Spaghetti-Code -a Menuitis -a TTY -a Elegant -d "$_BASE"
+	_tutr_generic_test -c cat -a $SFILE -a $MFILE -a $TFILE -a $EFILE -d "$_BASE"
 }
 
 cat_emts_hint() {
@@ -453,23 +454,23 @@ cat_i_pre() {
 cat_i_prologue() {
 	if   (( _LINES > 76 )); then
 		cat <<-:
-		The file $(path Indent-Style) is longer than all of the others, but somehow
+		The file $(path $IFILE) is longer than all of the others, but somehow
 		still fits on your screen.  I have to ask, are you really able to read
 		this text?  Your font must be so small!
 
 		Anyhow, run this command now:
-		  $(cmd cat Indent-Style)
+		  $(cmd cat $IFILE)
 		:
 	else
 		cat <<-:
-		$(path Indent-Style) certainly will not fit on your screen, but I am going to ask
+		$(path $IFILE) certainly will not fit on your screen, but I am going to ask
 		you to $(cmd cat) it anyway.
 		:
 	fi
 }
 
 cat_i_test() {
-	_tutr_generic_test -c cat -a Indent-Style -d "$_BASE"
+	_tutr_generic_test -c cat -a $IFILE -d "$_BASE"
 }
 
 cat_i_hint() {
@@ -478,7 +479,7 @@ cat_i_hint() {
 	cat <<-:
 
 	Run this command to proceed:
-	  $(cmd cat Indent-Style)
+	  $(cmd cat $IFILE)
 	:
 }
 
@@ -515,13 +516,13 @@ less_prologue() {
 
 	$_LESS_KEYS
 
-	Read the file $(path Indent-Style) in $(cmd less).  Use these keys to scan all the way
+	Read the file $(path $IFILE) in $(cmd less).  Use these keys to scan all the way
 	through it.  There is a quiz afterward.
 	:
 }
 
 less_test() {
-	_tutr_generic_test -c less -a Indent-Style -d "$_BASE"
+	_tutr_generic_test -c less -a $IFILE -d "$_BASE"
 }
 
 less_hint() {
@@ -615,7 +616,7 @@ indentation_quiz_prologue() {
 	cat <<-:
 	I wasn't kidding about the quiz.
 
-	If you get it wrong, re-read $(path Indent-Style) with $(cmd less) and try again.
+	If you get it wrong, re-read $(path $IFILE) with $(cmd less) and try again.
 
 	Run $(cmd quiz) to proceed.
 	:
@@ -629,7 +630,7 @@ indentation_quiz_test() {
 	[[ ${_CMD[0]} == quiz && $_RES == 0 ]] && return 0
 	[[ ${_CMD[0]} == quiz && $_RES == $_GAVE_UP ]] && return 0
 	[[ ${_CMD[0]} == quiz ]] && return $_TRY_AGAIN
-	[[ ${_CMD[@]} == "less Indent-Style" ]] && return $_REREAD_FILE
+	[[ ${_CMD[@]} == "less $IFILE" ]] && return $_REREAD_FILE
 	[[ ${_CMD[0]} == less ]] && return $_RAN_LESS
 	return $_PASS
 }
@@ -655,7 +656,7 @@ indentation_quiz_hint() {
 		programming language you aren't using in this class.  This is to
 		help you practice navigating a long document in the $(cmd less) pager.
 
-		Run $(cmd less Indent-Style) to read up on the indentation types and
+		Run $(cmd less $IFILE) to read up on the indentation types and
 		try again.
 		:
 		;;
@@ -794,12 +795,12 @@ cat_n_mmm_prologue() {
 	output.  It's okay if you didn't catch it before; you can re-read the
 	manual to find it.
 
-	Then, run $(cmd cat) again using that option with $(path Menuitis) repeated thrice to
+	Then, run $(cmd cat) again using that option with $(path $MFILE) repeated thrice to
 	see how many lines in total are output.
 
 	In other words, fill the blank in this command with $(cmd cat)'s line
 	numbering option:
-	  $(cmd cat __ Menuitis Menuitis Menuitis)
+	  $(cmd cat __ $MFILE $MFILE $MFILE)
 	:
 }
 
@@ -808,15 +809,15 @@ cat_n_mmm_test() {
 	_ALMOST=98
 	_READ_MANUAL=97
 	[[ "${_CMD[@]}" == "man cat" ]] && return $_READ_MANUAL
-	_tutr_noop && return $PASS
-	[[ "${_CMD[@]}" == "cat __ Menuitis Menuitis Menuitis" ]] && return $_LITERALLY
-	[[ "${_CMD[@]}" == "cat -b Menuitis Menuitis Menuitis" ]] && return $_ALMOST
-	_tutr_generic_test -c cat -a -n -a Menuitis -a Menuitis  -a Menuitis -d "$_BASE"
+	_tutr_noop && return $NOOP
+	[[ "${_CMD[@]}" == "cat __ $MFILE $MFILE $MFILE" ]] && return $_LITERALLY
+	[[ "${_CMD[@]}" == "cat -b $MFILE $MFILE $MFILE" ]] && return $_ALMOST
+	_tutr_generic_test -c cat -a -n -a $MFILE -a $MFILE  -a $MFILE -d "$_BASE"
 }
 
 cat_n_mmm_hint() {
 	case $1 in
-		$PASS)
+		$NOOP)
 			;;
 
 		$_READ_MANUAL)
@@ -841,7 +842,7 @@ cat_n_mmm_hint() {
 
 			$(bld Replace the blank in this command) with the option from $(cmd cat)'s manual that
 			enables line numbering.
-			  $(cmd cat __ Menuitis Menuitis Menuitis)
+			  $(cmd cat __ $MFILE $MFILE $MFILE)
 			:
 			;;
 
@@ -899,13 +900,13 @@ ls_1_prologue() {
 ls_1_test() {
 	_READ_MANUAL=97
 	[[ "${_CMD[@]}" == "man ls" ]] && return $_READ_MANUAL
-	_tutr_noop && return $PASS
+	_tutr_noop && return $NOOP
 	_tutr_generic_test -c ls -a '^--format=single-column$|^-1$' -d "$_BASE"
 }
 
 ls_1_hint() {
 	case $1 in
-		$PASS)
+		$NOOP)
 			;;
 
 		$_READ_MANUAL)
@@ -1005,14 +1006,14 @@ ls_1S_test() {
 	[[ "${_CMD[@]}" == "ls -S" ]] && return $_SORTED
 	[[ "${_CMD[@]}" == "ls -1" ]] && return $_SINGLE
 	[[ "${_CMD[@]}" == ls*s* ]] && return $_PRINT_SIZE
-	_tutr_noop && return $PASS
+	_tutr_noop && return $NOOP
 	[[ "${_CMD[@]}" =~ $pattern ]] && return 0
 	_tutr_generic_test -c ls -a -1 -a -S -d "$_BASE"
 }
 
 ls_1S_hint() {
 	case $1 in
-		$PASS)
+		$NOOP)
 			;;
 
 		$_READ_MANUAL)
@@ -1126,14 +1127,14 @@ ls_1t_test() {
 	[[ "${_CMD[0]}" == man ]] && return $_MAN_WRONG_PAGE
 	[[ "${_CMD[@]}" == "ls -t" ]] && return $_SORTED
 	[[ "${_CMD[@]}" == "ls -1" ]] && return $_SINGLE
-	_tutr_noop && return $PASS
+	_tutr_noop && return $NOOP
 	[[ "${_CMD[@]}" =~ $pattern ]] && return 0
 	_tutr_generic_test -c ls -a -1 -a -t -d "$_BASE"
 }
 
 ls_1t_hint() {
 	case $1 in
-		$PASS)
+		$NOOP)
 			;;
 
 		$_SINGLE)
@@ -1244,7 +1245,7 @@ ls_1tr_test() {
 	local pattern="^ls -r -t -1$|^ls -t -r -1$|^ls -r -1 -t$|^ls -1 -r -t$|^ls -t -1 -r$|^ls -1 -t -r$|^ls -tr -1$|^ls -1 -tr$|^ls -rt -1$|^ls -1 -rt$|^ls -r -t1$|^ls -t1 -r$|^ls -r -1t$|^ls -1t -r$|^ls -t -1r$|^ls -1r -t$|^ls -t -r1$|^ls -r1 -t$|^ls -rt1$|^ls -tr1$|^ls -r1t$|^ls -1rt$|^ls -t1r$|^ls -1tr$"
 
 	[[ "${_CMD[@]}" == "man ls" ]] && return $_READ_MANUAL
-	_tutr_noop && return $PASS
+	_tutr_noop && return $NOOP
 	[[ ${_CMD[0]} == ls && "${_CMD[@]}" == *X* ]] && return $_LITERALLY
 	[[ "${_CMD[@]}" =~ $pattern ]] && return 0
 	_tutr_generic_test -c ls -a -1 -a -r -a -t -d "$_BASE"
@@ -1252,7 +1253,7 @@ ls_1tr_test() {
 
 ls_1tr_hint() {
 	case $1 in
-		$PASS)
+		$NOOP)
 			;;
 
 		$_READ_MANUAL)
@@ -1402,7 +1403,7 @@ man_man_test() {
 	# 16     At least one of the pages/files/keywords didn't exist or wasn't matched.
 	[[ ${_CMD[@]} = 'man -k manual' && $_RES == 16 ]] && return $_MANDB_NOT_BUILT
 	[[ "${_CMD[@]}" == "man man" ]] && return $_READ_MANUAL
-	_tutr_noop && return $PASS
+	_tutr_noop && return $NOOP
 	[[ "${_CMD[@]}" == "man __ manual" ]] && return $_LITERALLY
 	[[ "${_CMD[@]}" == "man -f manual" ]] && return $_ALMOST
 	[[ "${_CMD[@]}" == "apropos manual" ]] && return 0
@@ -1411,7 +1412,7 @@ man_man_test() {
 
 man_man_hint() {
 	case $1 in
-		$PASS)
+		$NOOP)
 			;;
 
 		$_READ_MANUAL)

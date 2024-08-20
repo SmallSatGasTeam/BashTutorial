@@ -85,7 +85,8 @@ err()  { echo ${_r}$*${_Z} ; }
 path() { echo ${_u}$*${_Z} ; }
 kbd()  { echo ${_m}$*${_Z} ; }
 var()  { echo ${_c}$*${_Z} ; }
-
+DuckieCorp() { echo ${_Y}DuckieCorp${_z} ; }
+_py() { (( $# == 0 )) && echo $(ylw_ Python) || echo $(ylw_ $*) ; }
 
 ## User defined colors
 # Lesson developers should define functions to simplify coloring and to improve

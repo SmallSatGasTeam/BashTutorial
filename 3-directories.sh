@@ -182,7 +182,7 @@ cd_music_prologue() {
 
 cd_music_test() {
 	if   [[ "$PWD" = "$_BASE/music" ]]; then return 0
-	elif _tutr_noop; then return $PASS
+	elif _tutr_noop; then return $NOOP
 	else _tutr_generic_test -c cd -a music -d "$_BASE"
 	fi
 }
@@ -251,7 +251,7 @@ cd_genre1_prologue() {
 
 cd_genre1_test() {
 	if   [[ "$PWD" = "$_BASE/music/genre1" ]]; then return 0
-	elif _tutr_noop; then return $PASS
+	elif _tutr_noop; then return $NOOP
 	else _tutr_generic_test -c cd -a genre1 -d "$_BASE/music"
 	fi
 }
@@ -329,7 +329,7 @@ cd_artist0_album2_prologue() {
 cd_artist0_album2_test() {
 	if   [[ "$PWD" = "$_BASE/music/genre1/artist0/album2" ]]; then return 0
 	elif [[ "$PWD" = "$_BASE/music/genre1/artist0" ]]; then return 99
-	elif _tutr_noop; then return $PASS
+	elif _tutr_noop; then return $NOOP
 	else _tutr_generic_test -c cd -a artist0/album2 -d "$_BASE/music/genre1"
 	fi
 }
@@ -411,7 +411,7 @@ cd_dot_dot0_prologue() {
 }
 
 cd_dot_dot0_test() {
-	if   _tutr_noop; then return $PASS
+	if   _tutr_noop; then return $NOOP
 	elif [[ "$PWD" = "$_BASE/music/genre1/artist0" ]]; then return 0
 	else _tutr_generic_test -c cd -a .. -d "$_BASE/music/genre1/artist0/album2"
 	fi
@@ -475,7 +475,7 @@ cd_dot_dot1_prologue() {
 
 cd_dot_dot1_test() {
 	if   [[ "$PWD" = "$_BASE/music/genre1" ]]; then return 0
-	elif _tutr_noop; then return $PASS
+	elif _tutr_noop; then return $NOOP
 	else _tutr_generic_test -c cd -a .. -d "$_BASE/music/genre1/artist0"
 	fi
 }
@@ -536,7 +536,7 @@ cd_dot_dot2_test() {
 	_IN_MUSIC=99
 	if   [[ "$PWD" = "$_BASE" ]]; then return 0
 	elif [[ "$PWD" = "$_BASE/music" ]]; then return $_IN_MUSIC
-	elif _tutr_noop; then return $PASS
+	elif _tutr_noop; then return $NOOP
 	else _tutr_generic_test -c cd -a ../.. -d "$_BASE/music/genre1"
 	fi
 }
@@ -608,7 +608,7 @@ cd_home_prologue() {
 
 cd_home_test() {
 	if   [[ "$PWD" = "$HOME" ]]; then return 0
-	elif _tutr_noop; then return $PASS
+	elif _tutr_noop; then return $NOOP
 	else _tutr_generic_test -c 'cd|pushd' -d "$_BASE"
 	fi
 }
@@ -734,7 +734,7 @@ cd_minus0_prologue() {
 
 cd_minus0_test() {
 	if   [[ "$PWD" = "$_BASE" ]]; then return 0
-	elif _tutr_noop; then return $PASS
+	elif _tutr_noop; then return $NOOP
 	else _tutr_generic_test -c cd -a - -d "$_BASE"
 	fi
 }
@@ -770,7 +770,7 @@ cd_root_prologue() {
 
 cd_root_test() {
 	if   [[ "$PWD" = / ]]; then return 0
-	elif _tutr_noop; then return $PASS
+	elif _tutr_noop; then return $NOOP
 	else _tutr_generic_test -c cd -a / -d "/"
 	fi
 }
@@ -845,7 +845,7 @@ cd_minus1_prologue() {
 
 cd_minus1_test() {
 	if   [[ "$PWD" = "$_BASE" ]]; then return 0
-	elif _tutr_noop; then return $PASS
+	elif _tutr_noop; then return $NOOP
 	else _tutr_generic_test -c cd -a - -d "$_BASE"
 	fi
 }
@@ -883,7 +883,7 @@ cd_a_file_test() {
 		&& ${_CMD[1]} = a_file \
 		&& "$PWD" = "$_BASE" \
 		&& $_RES == 1 ]]; then return 0
-	elif _tutr_noop; then return $PASS
+	elif _tutr_noop; then return $NOOP
 	elif [[ -n $ZSH_NAME ]]; then _tutr_generic_test -f -c cd -a a_file -d "$_BASE"
 	# cd'ing into a file returns success in Bash
 	else _tutr_generic_test -c cd -a a_file -d "$_BASE"
@@ -968,7 +968,7 @@ cd_not_a_dir_test() {
 		&& ${_CMD[1]} = not-a-dir \
 		&& "$PWD" = "$_BASE" \
 		&& $_RES == 1 ]]; then return 0
-	elif _tutr_noop; then return $PASS
+	elif _tutr_noop; then return $NOOP
 	elif [[ -n $ZSH_NAME ]]; then _tutr_generic_test -f -c cd -a not-a-dir -d "$_BASE"
 	# cd'ing into a non-existent file returns success in Bash
 	else _tutr_generic_test -c cd -a not-a-dir -d "$_BASE"
@@ -1043,7 +1043,7 @@ mkdir_alpha_prologue() {
 
 mkdir_alpha_test() {
 	if   [[ -d $_BASE/alpha ]]; then return 0
-	elif _tutr_noop; then return $PASS
+	elif _tutr_noop; then return $NOOP
 	else _tutr_generic_test -c mkdir -a alpha -d "$_BASE"
 	fi
 }
@@ -1091,7 +1091,7 @@ cd_alpha_prologue() {
 
 cd_alpha_test() {
 	if   [[ "$PWD" = "$_BASE/alpha" ]]; then return 0
-	elif _tutr_noop; then return $PASS
+	elif _tutr_noop; then return $NOOP
 	else _tutr_generic_test -c cd -a alpha -d "$_BASE"
 	fi
 }
@@ -1133,7 +1133,7 @@ mkdir_beta_gamma_prologue() {
 mkdir_beta_gamma_test() {
 	_FORGOT_P=99
 	if   [[ -d $_BASE/alpha/beta/gamma ]]; then return 0
-	elif _tutr_noop; then return $PASS
+	elif _tutr_noop; then return $NOOP
 	elif [[ ${_CMD[@]} == "mkdir beta/gamma" && $_RES != 0 ]]; then return $_FORGOT_P
 	else _tutr_generic_test -c mkdir -a -p -a beta/gamma -d "$_BASE/alpha"
 	fi
@@ -1177,7 +1177,7 @@ cd_beta_prologue() {
 
 cd_beta_test() {
 	if   [[ "$PWD" = "$_BASE/alpha/beta" ]]; then return 0
-	elif _tutr_noop; then return $PASS
+	elif _tutr_noop; then return $NOOP
 	else _tutr_generic_test -c cd -a beta -d "$_BASE/alpha"
 	fi
 }
@@ -1216,7 +1216,7 @@ rmdir_gamma_prologue() {
 
 rmdir_gamma_test() {
 	if   [[ ! -d $_BASE/alpha/beta/gamma ]]; then return 0
-	elif _tutr_noop; then return $PASS
+	elif _tutr_noop; then return $NOOP
 	else _tutr_generic_test -c rmdir -a gamma -d "$_BASE/alpha/beta"
 	fi
 }
@@ -1249,7 +1249,7 @@ cd_dot_dot3_prologue() {
 cd_dot_dot3_test() {
 	_ALMOST_THERE=99
 	if   [[ "$PWD" = "$_BASE" ]]; then return 0
-	elif _tutr_noop; then return $PASS
+	elif _tutr_noop; then return $NOOP
 	elif [[ "$PWD" = "$_BASE/alpha" ]]; then return $_ALMOST_THERE
 	else _tutr_generic_test -c cd -a ../.. -d "$_BASE"
 	fi
@@ -1297,7 +1297,7 @@ rmdir_alpha_prologue() {
 }
 
 rmdir_alpha_test() {
-	_tutr_noop && return $PASS
+	_tutr_noop && return $NOOP
 	_tutr_generic_test -c rmdir -a "alpha/?" -d "$_BASE" -f
 }
 
@@ -1436,13 +1436,13 @@ rm_r_alpha_test() {
 	[[ "${_CMD[@]}" == man ]] && return $_MAN_NO_PAGE
 	[[ "${_CMD[@]}" == "man rm" || "${_CMD[@]}" == "man 1 rm" ]] && return $_READ_MANUAL
 	[[ "${_CMD[0]}" == man ]] && return $_MAN_WRONG_PAGE
-	_tutr_noop && return $PASS
+	_tutr_noop && return $NOOP
 	_tutr_generic_test -c rm -a '^-[rR]$|^--recursive$' -a alpha -d "$_BASE"
 }
 
 rm_r_alpha_hint() {
 	case $1 in
-		$PASS)
+		$NOOP)
 			;;
 
 		$_READ_MANUAL)
@@ -1565,7 +1565,7 @@ rm_rf_music_prologue() {
 
 rm_rf_music_test() {
 	if   ! [[ -d $_BASE/music ]]; then return 0
-	elif _tutr_noop; then return $PASS
+	elif _tutr_noop; then return $NOOP
 	elif [[ $PWD != $_BASE ]]; then return $WRONG_PWD
 	elif [[ ${#_CMD[@]} < 3 ]]; then return $TOO_FEW_ARGS
 	elif [[ ${_CMD[@]} = 'rm -rf' ]]; then return $TOO_FEW_ARGS

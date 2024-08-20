@@ -557,7 +557,7 @@ nano_readme_test() {
 	_OPENED_SIGNATURE=95
 
 	if   [[ "$PWD" != "$_BASE" ]]; then return $WRONG_PWD
-	elif _tutr_noop; then return $PASS
+	elif _tutr_noop; then return $NOOP
 	elif [[ $(git hash-object "$_BASE/README.md") = $README_HSH ]]; then
 		# The safe way to access last element in an array
 		if [[ -n $_CMD && "${_CMD[${#_CMD[@]}-1]}" == Signature.md ]]; then return $_OPENED_SIGNATURE
@@ -712,7 +712,7 @@ mkdirs_test() {
 		&& -d "$_BASE/data"
 		&& -d "$_BASE/junk"
 		&& -d "$_BASE/instructions" ]]; then return 0
-	elif _tutr_noop rmdir; then return $PASS
+	elif _tutr_noop rmdir; then return $NOOP
 	elif [[ ! -d "$_BASE/src" ]]; then return $_SRC
 	elif [[ ! -d "$_BASE/src/Testing" ]]; then return $_TST
 	elif [[ ! -d "$_BASE/doc" ]]; then return $_DOC
@@ -817,7 +817,7 @@ sort_files_test() {
 		&& -f "$_BASE/junk/movie.mkv" \
 		&& -f "$_BASE/junk/image.png" \
 		]]; then return 0
-	elif _tutr_noop cd pushd popd create_files; then return $PASS
+	elif _tutr_noop cd pushd popd create_files; then return $NOOP
 	elif [[ $_RES == 127 ]]; then _tutr_generic_test -c mv -x
 	elif [[ $PWD != $_BASE ]]; then return $WRONG_PWD
 
@@ -928,7 +928,7 @@ remove_junk_test() {
 	elif [[ -d "$_BASE/src" && ! -d "$_BASE/junk" ]]; then return 0
 	# if _BASE is NOT a substring of the current dir, then report an error
 	elif ! [[ $PWD = $_BASE* ]]; then return $WRONG_PWD
-	elif _tutr_noop man cd; then return $PASS
+	elif _tutr_noop man cd; then return $NOOP
 	elif [[ ${_CMD[0]} = rmdir ]]; then return $_RMDIR
 	elif [[ ${_CMD[0]} != rm ]]; then return $WRONG_CMD
 	elif [[ -d "$_BASE/junk" ]]; then return $_JUNK_NOT_DELETED
@@ -1015,7 +1015,7 @@ cd_into_src_prologue() {
 
 cd_into_src_test() {
 	if   [[ "$PWD" == "$_BASE/src" ]]; then return 0
-	elif _tutr_noop; then return $PASS
+	elif _tutr_noop; then return $NOOP
 	else _tutr_generic_test -c cd -a src -d "$_BASE/src"
 	fi
 }
@@ -1047,7 +1047,7 @@ run_tests_prologue() {
 run_tests_test() {
 	_ENTERED_REPL=99
 
-	if   _tutr_noop man; then return $PASS
+	if   _tutr_noop man; then return $NOOP
 	elif [[ ${_CMD[@]} = $_PY ]]; then return $_ENTERED_REPL
 	else _tutr_generic_test -f -c $_PY -a runTests.py -d "$_BASE/src"
 	fi
@@ -1134,7 +1134,7 @@ nano_main_py_prologue() {
 }
 
 nano_main_py_test() {
-	if   _tutr_noop cd pushd popd; then return $PASS
+	if   _tutr_noop cd pushd popd; then return $NOOP
 	elif [[ "$PWD" != "$_BASE/src" ]]; then return $WRONG_PWD
 	elif _tutr_is_editor && [[ ${_CMD[1]} == main.py ]]; then return 0
 	else _tutr_generic_test -c nano -a main.py
@@ -1281,7 +1281,7 @@ fix_bug_test() {
 	_MAIN_PY_CHANGED=98
 	_MAIN_PY_UNCHANGED=96
 
-	if   _tutr_noop cd pushd popd; then return $PASS
+	if   _tutr_noop cd pushd popd; then return $NOOP
 	elif [[ "$PWD" = "$_BASE" ]]; then return $_NOT_IN_SRC
 	elif [[ "$PWD" != "$_BASE/src" ]]; then return $WRONG_PWD
 	elif _tutr_is_editor; then
@@ -1383,7 +1383,7 @@ signature_test() {
 	_TODO=96
     _TOTAL=95
 
-	if   _tutr_noop cd pushd popd; then return $PASS
+	if   _tutr_noop cd pushd popd; then return $NOOP
 	elif [[ $PWD = "$_BASE" ]]; then return $_GOTO_DOC
 	elif [[ $PWD != "$_BASE/doc" ]]; then return $WRONG_PWD
 	elif [[ ! -f "$_BASE/doc/Signature.md" ]]; then return $_MISSING

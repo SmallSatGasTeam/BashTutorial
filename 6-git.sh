@@ -35,7 +35,7 @@ if [[ -n $_TUTR ]]; then
 	_origin() { (( $# == 0 )) && echo $(red origin) || echo $(red $*); }
 
 	# origin of the starter code repo
-	_SSH_REPO_URL=git@gitlab.cs.usu.edu:erik.falor/$_REPONAME
+	_SSH_REPO_URL=git@gitlab.cs.usu.edu:duckiecorp/$_REPONAME
 
 	# Open the current Git repo's origin web page
 	browse_repo() {
@@ -626,7 +626,7 @@ git_clone_prologue() {
 }
 
 git_clone_test() {
-	_tutr_generic_test -c git -a clone -a "^https://gitlab.cs.usu.edu/erik.falor/cs1440-falor-erik-assn$_A$|^git@gitlab.cs.usu.edu:erik.falor/cs1440-falor-erik-assn$_A$" -d "$_PARENT"
+	_tutr_generic_test -c git -a clone -a "^https://gitlab.cs.usu.edu/duckiecorp/cs1440-falor-erik-assn$_A$|^git@gitlab.cs.usu.edu:duckiecorp/cs1440-falor-erik-assn$_A$" -d "$_PARENT"
 }
 
 git_clone_hint() {
@@ -654,7 +654,7 @@ git_clone_hint() {
 			cat <<-:
 
 			To clone this repo run
-			  $(cmd git clone git@gitlab.cs.usu.edu:erik.falor/$_REPONAME)
+			  $(cmd git clone git@gitlab.cs.usu.edu:duckiecorp/$_REPONAME)
 			:
 		;;
 	esac
@@ -703,7 +703,7 @@ cd_into_repo_prologue() {
 
 cd_into_repo_test() {
 	if   [[ $PWD = $_REPO ]]; then return 0
-	elif _tutr_noop; then return $PASS
+	elif _tutr_noop; then return $NOOP
 	else _tutr_generic_test -c cd -a $_REPONAME -d "$_REPO"
 	fi
 }
@@ -741,7 +741,7 @@ git_status2_prologue() {
 }
 
 git_status2_test() {
-	if   _tutr_noop; then return $PASS
+	if   _tutr_noop; then return $NOOP
 	else _tutr_generic_test -c git -a status -d "$_REPO"
 	fi
 }
@@ -832,7 +832,7 @@ edit_readme0_prologue() {
 edit_readme0_test() {
 	_README_UNCHANGED=99
 	if   [[ "$PWD" != "$_REPO" ]]; then return $WRONG_PWD
-	elif [[ ${_CMD[0]} = git && ${_CMD[1]} = status ]]; then return $PASS
+	elif [[ ${_CMD[0]} = git && ${_CMD[1]} = status ]]; then return $NOOP
 	elif _tutr_file_unstaged README.md; then return 0
 	elif ! _tutr_file_changed README.md; then return $_README_UNCHANGED
 	else _tutr_generic_test -c git -a status
@@ -841,7 +841,7 @@ edit_readme0_test() {
 
 edit_readme0_hint() {
 	case $1 in
-		$PASS)
+		$NOOP)
 			return
 			;;
 
@@ -961,7 +961,7 @@ git_restore_test() {
 	#       and stages their change instead of reverting it
 	if   [[ $PWD != $_REPO ]]; then return $WRONG_PWD
 	elif [[ -z $(git status --porcelain=v1) ]]; then return 0
-	elif _tutr_noop; then return $PASS
+	elif _tutr_noop; then return $NOOP
 	else _tutr_generic_test -c git -a restore -a README.md -d "$_REPO"
 	fi
 }
@@ -993,7 +993,7 @@ git_status4_prologue() {
 }
 
 git_status4_test() {
-	if _tutr_noop; then return $PASS
+	if _tutr_noop; then return $NOOP
 	else _tutr_generic_test -c git -a status -d "$_REPO"
 	fi
 }
@@ -1071,7 +1071,7 @@ git_add0_test() {
 	_README_UNCHANGED=99
 	_README_DELETED=98
 	if   [[ "$PWD" != "$_REPO" ]]; then return $WRONG_PWD
-	elif [[ ${_CMD[0]} = git && ${_CMD[1]} = status ]]; then return $PASS
+	elif [[ ${_CMD[0]} = git && ${_CMD[1]} = status ]]; then return $NOOP
 	elif _tutr_file_staged README.md; then return 0
 	elif [[ ! -f "$_REPO/README.md" ]]; then return $_README_DELETED
 	elif ! _tutr_file_changed README.md; then return $_README_UNCHANGED
@@ -1236,8 +1236,8 @@ git_commit0_prologue() {
 git_commit0_test() {
 	if   [[ $PWD != $_REPO ]]; then return $WRONG_PWD
 	elif _tutr_branch_ahead; then return 0
-	elif _tutr_is_editor; then return $PASS
-	elif [[ ${_CMD[@]} = 'git status' ]]; then return $PASS
+	elif _tutr_is_editor; then return $NOOP
+	elif [[ ${_CMD[@]} = 'git status' ]]; then return $NOOP
 	else _tutr_generic_test -c git -a commit -d "$_REPO"
 	fi
 }
@@ -1425,16 +1425,16 @@ git_remote_v_prologue() {
 	mine by running
 	  $(cmd git remote -v)
 
-	Try it!  Look for my username ($(cyn erik.falor)) in the URL that is printed.
+	Try it!  Look for the username ($(cyn duckiecorp)) in the URL that is printed.
 	:
 }
 
 git_remote_v_test() {
 	if   [[ $PWD != $_REPO ]]; then return $WRONG_PWD
-	elif _tutr_noop; then return $PASS
-	elif [[ ${_CMD[0]} = git && ${_CMD[1]} = help ]]; then return $PASS
-	elif [[ ${_CMD[0]} = git && ${_CMD[1]} = status ]]; then return $PASS
-	elif [[ ${_CMD[0]} = git && ${_CMD[1]} = log ]]; then return $PASS
+	elif _tutr_noop; then return $NOOP
+	elif [[ ${_CMD[0]} = git && ${_CMD[1]} = help ]]; then return $NOOP
+	elif [[ ${_CMD[0]} = git && ${_CMD[1]} = status ]]; then return $NOOP
+	elif [[ ${_CMD[0]} = git && ${_CMD[1]} = log ]]; then return $NOOP
 	else _tutr_generic_test -c git -a remote -a -v -d "$_REPO"
 	fi
 }
@@ -1514,7 +1514,7 @@ git_remote_rename_prologue() {
 ## Ensure that a remote called origin no longer exists
 git_remote_rename_test() {
 	if   [[ $PWD != $_REPO ]]; then return $WRONG_PWD
-	elif _tutr_noop; then return $PASS
+	elif _tutr_noop; then return $NOOP
 	fi
 
 	_WRONG_REMOTE_NAME=99
@@ -1524,10 +1524,10 @@ git_remote_rename_test() {
 	elif [[ $remote != origin ]]; then
 		_REMOTE=$remote
 		return $_WRONG_REMOTE_NAME
-	elif [[ ${_CMD[0]} = git && ${_CMD[1]} = help ]]; then return $PASS
-	elif [[ ${_CMD[0]} = git && ${_CMD[1]} = status ]]; then return $PASS
-	elif [[ ${_CMD[0]} = git && ${_CMD[1]} = log ]]; then return $PASS
-	elif [[ ${_CMD[0]} = git && ${_CMD[1]} = remote && ${_CMD[2]} = -v ]]; then return $PASS
+	elif [[ ${_CMD[0]} = git && ${_CMD[1]} = help ]]; then return $NOOP
+	elif [[ ${_CMD[0]} = git && ${_CMD[1]} = status ]]; then return $NOOP
+	elif [[ ${_CMD[0]} = git && ${_CMD[1]} = log ]]; then return $NOOP
+	elif [[ ${_CMD[0]} = git && ${_CMD[1]} = remote && ${_CMD[2]} = -v ]]; then return $NOOP
 	else _tutr_generic_test -c git -a remote -a rename -a origin -a old-origin -d "$_REPO"
 	fi
 }
@@ -1625,7 +1625,7 @@ git_remote_add_prologue() {
 
 	Your new URL will look like that, except for these differences:
 
-	  * Replace $(cyn erik.falor) with your $(bld GitLab username) (case does not matter)
+	  * Replace $(cyn duckiecorp) with your $(bld GitLab username) (case does not matter)
 	    * Your $(bld GitLab username) is most likely your $(bld A Number)
 	  * Replace $(cyn falor-erik) with your $(bld real name) (again, case does not matter)
 	    * To make things easy on your grader, use your Canvas $(bld preferred name)
@@ -1678,12 +1678,12 @@ git_remote_add_prologue() {
 git_remote_add_test() {
 	_WRONG_SUBCOMMAND=95
 	if   [[ $PWD != $_REPO ]]; then return $WRONG_PWD
-	elif _tutr_noop; then return $PASS
-	elif [[ ${_CMD[0]} = git && ${_CMD[1]} = help ]]; then return $PASS
-	elif [[ ${_CMD[0]} = git && ${_CMD[1]} = status ]]; then return $PASS
-	elif [[ ${_CMD[0]} = git && ${_CMD[1]} = log ]]; then return $PASS
-	elif [[ ${_CMD[0]} = git && ${_CMD[1]} = remote && ${_CMD[2]} = -v ]]; then return $PASS
-	elif [[ ${_CMD[0]} = git && ${_CMD[1]} = remote && ${_CMD[2]} = remove ]]; then return $PASS
+	elif _tutr_noop; then return $NOOP
+	elif [[ ${_CMD[0]} = git && ${_CMD[1]} = help ]]; then return $NOOP
+	elif [[ ${_CMD[0]} = git && ${_CMD[1]} = status ]]; then return $NOOP
+	elif [[ ${_CMD[0]} = git && ${_CMD[1]} = log ]]; then return $NOOP
+	elif [[ ${_CMD[0]} = git && ${_CMD[1]} = remote && ${_CMD[2]} = -v ]]; then return $NOOP
+	elif [[ ${_CMD[0]} = git && ${_CMD[1]} = remote && ${_CMD[2]} = remove ]]; then return $NOOP
 	elif [[ ${_CMD[0]} = git && ${_CMD[1]} != remote ]]; then return $_WRONG_SUBCOMMAND
 	fi
 
@@ -1695,7 +1695,7 @@ git_remote_add_test() {
 	elif [[ $URL != git@* ]]; then return $_NOT_SSH_URL
 	elif [[ $URL =  git@gitlab.cs.usu.edu/* ]]; then return 94
 	elif [[ $URL != *gitlab.cs.usu.edu* ]]; then return 93
-	elif [[ $URL =  *:erik.falor/* ]]; then return 98
+	elif [[ $URL =  *:duckiecorp/* ]]; then return 98
 	elif [[ $URL != */cs1440-* ]]; then return 92
 	elif [[ $URL != *-assn$_A && $URL != *-assn$_A.git ]]; then return 96
 	elif [[ $URL =  */$_REPONAME* ]]; then return 97
@@ -1885,9 +1885,9 @@ git_push_all_prologue() {
 
 git_push_all_test() {
 	_NO_U=99
-	if   [[ ${_CMD[@]} = 'git help push' ]]; then return $PASS
-	elif [[ ${_CMD[@]} = 'git remote' ]]; then return $PASS
-	elif [[ ${_CMD[@]} = 'git remote -v' ]]; then return $PASS
+	if   [[ ${_CMD[@]} = 'git help push' ]]; then return $NOOP
+	elif [[ ${_CMD[@]} = 'git remote' ]]; then return $NOOP
+	elif [[ ${_CMD[@]} = 'git remote -v' ]]; then return $NOOP
 	elif (( _RES == 0 )) && [[ ${_CMD[@]} = 'git push'* && ${_CMD[@]} != *'-u'* ]]; then return $_NO_U
 	elif (( _RES == 0 )) && [[ ${_CMD[@]} = 'git push -u origin master' ]]; then return 0
 	else _tutr_generic_test -c git -a push -a -u -a origin -a --all -d "$_REPO"

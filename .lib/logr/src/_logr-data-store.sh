@@ -37,7 +37,7 @@ _logrf_printHeader() {
     # TODO: Look at data from _LOGR_ADDITIONAL_ENTRIES list to add additional data to row
     # TODO: Set it up so _LOGR_ADDITIONAL_ENTRIES will be formatted like "HEADER1:VAR1,HEADER2:VAR2,..." instead of hardcoded with shell tutor values
 
-    __LOGR_EXTRA_HEADERS="shellTutor_step,shellTutor_testExitCode,shellTutor_statelog_code,shellTutor_statelog_text"
+    __LOGR_EXTRA_HEADERS="shellTutor_step,shellTutor_stepName,shellTutor_testExitCode,shellTutor_statelog_code,shellTutor_statelog_text"
     # shellTutor_step == $_I
 
     __LOGR_HEADER=$__LOGR_DEFAULT_HEADER
@@ -65,6 +65,8 @@ _logrf_printRow() {
     __LOGR_ROW+="$__LOGR_CMD_DURATION,"
     # shellTutor_step
     __LOGR_ROW+="$__LOGR_TUTR_STEP,"
+    # shellTutor_stepName
+    __LOGR_ROW+="$__LOGR_TUTR_STEPNAME,"
     # shellTutor_testExitCode
     __LOGR_ROW+="$__LOGR_TUTR_TEST_RES,"
     # shellTutor_statelog_code

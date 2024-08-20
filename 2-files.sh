@@ -209,7 +209,7 @@ copy01_prologue() {
 }
 
 copy01_test() {
-	if   _tutr_noop ls; then return $PASS
+	if   _tutr_noop ls; then return $NOOP
 	elif [[ -f $_BASE/copy0.txt && -f $_BASE/copy1.txt ]]; then return 0
 	elif [[ ! -f $_BASE/copy0.txt ]]; then return 99
 	else _tutr_generic_test -c cp -a copy0.txt -a copy1.txt -d "$_BASE"
@@ -257,7 +257,7 @@ copy02_prologue() {
 }
 
 copy02_test() {
-	if   _tutr_noop; then return $PASS
+	if   _tutr_noop; then return $NOOP
 	elif [[ -f $_BASE/copy0.txt && -f $_BASE/copy2.txt ]]; then return 0
 	elif [[ ! -f $_BASE/copy0.txt ]]; then return 99
 	else _tutr_generic_test -c cp -a copy0.txt -a copy2.txt -d "$_BASE"
@@ -782,18 +782,18 @@ tabcmplt_cmd_test() {
 	_WRONG_LETTER=99
 	_COLD=98
 	_GETTING_WARMER=97
-	_GOOGLE=96
+	_CHATGPT=96
 	_UM_NO=95
 	_SO_CLOSE=94
 
-	[[ ${_CMD[@]} == whoami ]] && return 0
-	[[ $_OS == Windows && ${_CMD[@]} == whoami.exe ]] && return 0
-	[[ ${_CMD[@]} == "who am i" ]] && return $_SO_CLOSE
+	[[ ${_CMD[@]} == [Ww]hoami ]] && return 0
+	[[ $_OS == Windows && ${_CMD[@]} == [Ww][Hh][Oo][Aa][Mm][Ii].[Ee][Xx][Ee] ]] && return 0
+	[[ ${_CMD[@]} == [Ww][Hh][Oo]\ am\ i ]] && return $_SO_CLOSE
 	[[ ${_CMD[@]} == whois ]] && return $_UM_NO
-	[[ ${_CMD[0]} == who* ]] && return $_GETTING_WARMER
-	[[ ${_CMD[@]} == "id -un" ]] && return $_GOOGLE
-	[[ ${_CMD[@]} == 'echo $USER' ]] && return $_GOOGLE
-	[[ ${_CMD[0]} == id ]] && return $_GOOGLE
+	[[ ${_CMD[0]} == [Ww]ho* ]] && return $_GETTING_WARMER
+	[[ ${_CMD[@]} == "id -un" ]] && return $_CHATGPT
+	[[ ${_CMD[@]} == 'echo $USER' ]] && return $_CHATGPT
+	[[ ${_CMD[0]} == id ]] && return $_CHATGPT
 	[[ ${_CMD[0]} = w* ]] && return $_COLD
 	[[ ${_CMD[0]} != w* ]] && return $_WRONG_LETTER
 	return $_UM_NO
@@ -801,7 +801,7 @@ tabcmplt_cmd_test() {
 
 tabcmplt_cmd_hint() {
 	case $1 in
-		$PASS) ;;
+		$NOOP) ;;
 
 		$_COLD)
 			cat <<-:
@@ -830,9 +830,9 @@ tabcmplt_cmd_hint() {
 			:
 			;;
 
-		$_GOOGLE)
+		$_CHATGPT)
 			cat <<-:
-			Are you trying to solve this with Google, or something?
+			Did ChatGPT tell you to try that?
 			:
 			;;
 
@@ -1054,7 +1054,7 @@ move12_prologue() {
 move12_test() {
 	[[ ! -f $_BASE/move1.txt && -f $_BASE/move2.txt ]] && return 0
 	[[ ! -f $_BASE/move1.txt ]] && return 99
-	_tutr_noop && return $PASS
+	_tutr_noop && return $NOOP
 	_tutr_generic_test -c mv -a move1.txt -a move2.txt -d "$_BASE"
 }
 
@@ -1108,7 +1108,7 @@ mv_clobber_prologue() {
 }
 
 mv_clobber_test() {
-	_tutr_noop && return $PASS
+	_tutr_noop && return $NOOP
 	[[ ! -f $_BASE/move2.txt && ! -f $_BASE/different.txt ]] && return 99
 	_tutr_generic_test -c mv -a move2.txt -a different.txt -d "$_BASE"
 }
@@ -1198,7 +1198,7 @@ rm_1file_prologue() {
 }
 
 rm_1file_test() {
-	if   _tutr_noop; then return $PASS
+	if   _tutr_noop; then return $NOOP
 	elif [[ ! -f $_BASE/copy0.txt ]]; then return 0
 	elif [[ ${_CMD[@]} = "rm copy0.txt" && -f $_BASE/copy0.txt ]]; then return 99
 	else _tutr_generic_test -c rm -a copy0.txt -d "$_BASE"
@@ -1299,7 +1299,7 @@ rm_star0_test() {
 	if [[ -n $ZSH_NAME ]]; then
 		setopt local_options nullglob
 	fi
-	if   _tutr_noop; then return $PASS
+	if   _tutr_noop; then return $NOOP
 	elif [[ "$PWD" != "$_BASE" ]]; then return $WRONG_PWD
 	elif [[ -n $ZSH_NAME  && -z $(echo *.txt) ]]; then return 0
 	elif [[ -n $BASH_VERSION && $(echo *.txt) = "*.txt" ]]; then return 0
@@ -1430,7 +1430,7 @@ rm_star1_test() {
 	_STAR=97
 	_TOO_MUCH=96
 
-	if   _tutr_noop; then return $PASS
+	if   _tutr_noop; then return $NOOP
 	elif [[ "$PWD" != "$_BASE" ]]; then return $WRONG_PWD
 	elif [[ ${_CMD[0]} == rm && ${_CMD[1]} = "*" ]]; then return $_STAR
 	elif [[ -n $ZSH_NAME ]]; then
@@ -1591,7 +1591,7 @@ rm_star2_test() {
 	if [[ -n $ZSH_NAME ]]; then
 		setopt local_options nullglob
 	fi
-	if   _tutr_noop; then return $PASS
+	if   _tutr_noop; then return $NOOP
 	elif [[ -n $ZSH_NAME && -z $(echo *.jpg) ]]; then return $_REMOVED_JPGS
 	elif [[ -n $BASH_VERSION && $(echo *.jpg) == "*.jpg" ]]; then return $_REMOVED_JPGS
 	elif [[ -n $ZSH_NAME && -z $(echo *.png) && -z $(echo *.mp4) ]]; then return 0
@@ -1677,7 +1677,7 @@ rm_star3_test() {
 	fi
 
 	if [[ "$PWD" != "$_BASE" ]]; then return $WRONG_PWD
-	elif _tutr_noop; then return $PASS
+	elif _tutr_noop; then return $NOOP
 	elif [[ -n $ZSH_NAME && -z $(echo *) ]]; then return 0
 	elif [[ -n $BASH_VERSION && $(echo *) = "*" ]]; then return 0
 	elif [[ ${_CMD[0]} = rm ]]; then return 99

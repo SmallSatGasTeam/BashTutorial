@@ -24,6 +24,7 @@ _VIEWERS+=(
     most 1
     pg 1
     view 1
+    cat 1
 )
 
 

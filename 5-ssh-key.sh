@@ -21,7 +21,8 @@ if [[ -n $_TUTR ]]; then
 	_duckie() { (( $# == 0 )) && echo $(ylw DuckieCorp) || echo $(ylw $*) ; }
 fi
 
-_HTTPS_GITLAB_KEYS=https://$_GL/-/profile/keys
+# TODO: rewrite this lesson to prefer an ED25519 key (if possible)
+#       macOS defaults to RSA b/c of an older version of OpenSSH
 _KEYSIZE=2048
 _GL_IPADDR=129.123.29.225
 
@@ -42,6 +43,22 @@ _ssh_key_is_already_installed_msg() {
 	_tutr_pressenter
 }
 
+_ssh_key_exists_msg() {
+	cat <<-MSG
+	I found an SSH key named $(path $(basename $1)) under $(path ~/.ssh).
+
+	  * If you proceed with the lesson, you will skip over the step that
+	    creates a new SSH key.
+
+	  * If you would like to re-generate your SSH key under the tutorial's
+	    guidance, exit this lesson, delete these files and start over again:
+
+	  $(path $1)
+	  $(path $1.pub)
+
+	MSG
+	_tutr_pressenter
+}
 
 # There are four ways connecting to GitLab could fail
 #  0. No internet|host key verification failed = fix the problem and try again
@@ -256,7 +273,7 @@ ssh_keygen_test() {
 
 ssh_keygen_hint() {
 	case $1 in
-		$PASS)
+		$NOOP)
 			;;
 		$_KEYGEN_ARG)
 			cat <<-:
@@ -393,7 +410,7 @@ view_private_key_test() {
 
 view_private_key_hint() {
 	case $1 in
-		$PASS)
+		$NOOP)
 			;;
 
 		$VIEWED_WRONG_KEY)
@@ -588,7 +605,7 @@ view_public_key_test() {
 
 view_public_key_hint() {
 	case $1 in
-		$PASS)
+		$NOOP)
 			;;
 
 		$VIEWED_WRONG_KEY)
@@ -732,7 +749,7 @@ put_key_on_gitlab_test() {
 
 put_key_on_gitlab_hint() {
 	case $1 in
-		$PASS)
+		$NOOP)
 			;;
 		$STATUS_FAIL)
 			if (( _FAILS >= 3)); then

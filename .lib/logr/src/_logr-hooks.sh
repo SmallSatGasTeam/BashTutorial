@@ -29,6 +29,7 @@ _logrf_preexec() {
 _logrf_shelltutor_preexec() {
     # FOR THE SHELL TUTOR ONLY
     __LOGR_TUTR_STEP=$_I
+    __LOGR_TUTR_STEPNAME=${_STEPS[$_I]}
 }
 
 _logrf_precmd() {
