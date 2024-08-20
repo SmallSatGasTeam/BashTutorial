@@ -10,10 +10,10 @@ Interactive Unix Shell Tutorials
 0.  Install Git on your computer *(Mac and Windows users: detailed instructions are below)*.
 1.  Clone this repository.  Your output may be slightly different than this:
     ```
-    $ git clone https://gitlab.cs.usu.edu/erik.falor/shell-tutor
+    $ git clone https://gitlab.cs.usu.edu/duckiecorp/shell-tutor
 
     Cloning into 'shell-tutor'...
-    warning: redirecting to https://gitlab.cs.usu.edu/erik.falor/shell-tutor.git/
+    warning: redirecting to https://gitlab.cs.usu.edu/duckiecorp/shell-tutor.git/
     remote: Enumerating objects: 40, done.
     remote: Counting objects: 100% (40/40), done.
     remote: Compressing objects: 100% (39/39), done.
@@ -188,7 +188,7 @@ There are two ways to open the terminal:
 
 Beginning with lesson **1-commands.sh**, the Unix manual becomes an important part of the tutorial.  Git for Windows doesn't come with the manual, so I prepared an installer for you.
 
-0.  Download this file: [install-man-pages-1.sh](https://gitlab.cs.usu.edu/erik.falor/shell-tutor/uploads/16ca5c3f8c552922638bfb12ff375e2c/install-man-pages-1.sh)
+0.  Download this file: [install-man-pages-1.sh](https://gitlab.cs.usu.edu/duckiecorp/shell-tutor/uploads/16ca5c3f8c552922638bfb12ff375e2c/install-man-pages-1.sh)
 1.  Note where this file was saved on your computer
 2.  Open a new Git Bash terminal as an *Administrator* (right-click the Git+Bash icon and choose "Run as Administrator", or select that option from the Start menu)
     *   When prompted "Do you want to allow this app to make changes to your device?", click **Yes**
