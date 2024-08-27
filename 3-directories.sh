@@ -3,9 +3,12 @@
 . .lib/shell-compat-test.sh
 
 _DURATION=15
+_LSN_VERSION=1.0.0
 
-# Put tutorial library files into $PATH
-PATH=$PWD/.lib:$PATH
+# Put tutorial library files into $PATH if they are not already added
+if [[ -d "$PWD/.lib" && ":$PATH:" != *":$PWD/.lib:"* ]]; then
+	PATH=$PWD/.lib:$PATH
+fi
 
 source ansi-terminal-ctl.sh
 source progress.sh

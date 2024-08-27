@@ -1,5 +1,6 @@
 # vim: set expandtab tabstop=4 shiftwidth=4:
 
+source configuration.sh
 source stdlib.sh
 
 preexec_functions+=(_tutr_preexec)

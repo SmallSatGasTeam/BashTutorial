@@ -27,6 +27,11 @@ _logrf_preexec() {
 }
 
 _logrf_shelltutor_preexec() {
+    if [[ -n $ZSH_NAME ]]; then
+        emulate -L zsh
+        setopt ksh_arrays
+    fi
+
     # FOR THE SHELL TUTOR ONLY
     __LOGR_TUTR_STEP=$_I
     __LOGR_TUTR_STEPNAME=${_STEPS[$_I]}
@@ -46,6 +51,12 @@ _logrf_precmd() {
 _logrf_precmd_head() {
     __LOGR_RES=$?
 
+    if [[ -n $ZSH_NAME ]]; then
+        emulate -L zsh
+        setopt ksh_arrays
+    fi
+
+
     # Ensure that preexec was actually executed
     # If precmd executes and prexec doesn't, that indicates the user just hit enter with no command being run
     # This is important, as it shows activity but no meaningful command
@@ -63,6 +74,13 @@ _logrf_precmd_head() {
         __LOGR_CMD_STARTIME=$(_logrf_currTimeMillis)
         __LOGR_CMD_DURATION=0
         __LOGR_OG_PWD=$PWD
+
+        if [[ -n $__LOGR_TUTR_STEP ]]; then
+            __LOGR_TUTR_STEP=${_I:-0}
+        fi
+        if [[ -n $__LOGR_TUTR_STEPNAME ]]; then
+            __LOGR_TUTR_STEPNAME=${_STEPS[$_I]}
+        fi 
     fi
 }
 
@@ -80,7 +98,3 @@ _logrf_precmd_tail() {
 
     unset __LOGR_CMD_STARTIME __LOGR_CMD_ENDTIME __LOGR_RES __LOGR_CMD __LOGR_OG_PWD
 }
-
-# _logrf_initialize() {
-#     source src/platform.sh
-# }

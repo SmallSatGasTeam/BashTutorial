@@ -35,6 +35,8 @@ _LOGR_LOC="${_LOGR_LOC%/*}"
 
 _LOGR_SRC_DIR="$_LOGR_LOC/src"
 
+_LOGR_VERSION=1.0.0
+
 # Add $_LOGR_SRC_DIR to path, if it doesn't exist already
 if [[ -d "$_LOGR_SRC_DIR" && ":$PATH:" != *":$_LOGR_SRC_DIR:"* ]]; then
     PATH="$_LOGR_SRC_DIR:$PATH"

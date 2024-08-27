@@ -4,7 +4,12 @@ LAST=6
 CERT=certificate.txt
 
 . .lib/shell-compat-test.sh
-PATH=$PWD/.lib:$PATH
+
+# Put tutorial library files into $PATH if they are not already added
+if [[ -d "$PWD/.lib" && ":$PATH:" != *":$PWD/.lib:"* ]]; then
+	PATH=$PWD/.lib:$PATH
+fi
+
 source completed.sh
 source progress.sh
 source stdlib.sh
