@@ -1581,7 +1581,7 @@ git_remote_rename_epilogue() {
 	The reason why I asked you to rename $(_origin) instead of $(bld erasing) it
 	is so that your repository will always remember where it came from.
 
-	There is a chance that somebody will find a bug in an project, and I will
+	There is a chance that somebody will find a bug in a project, and I will
 	need to issue an update.  If your repository remembers that it came from
 	$(_origin old-origin), it will be very easy for you to fetch the fixed code.
 
