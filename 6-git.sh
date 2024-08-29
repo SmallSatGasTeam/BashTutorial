@@ -1608,7 +1608,13 @@ git_remote_add_rw() {
 }
 
 git_remote_add_ff() {
-	git remote add origin git@gitlab.cs.usu.edu:chad/cs1440-chadwick-chad-proj$_A
+	_tutr_info printf "'Just guessing... using /tmp/proj$_A as the remote URL for origin'"
+	if [[ ! -d /tmp/proj$_A ]]; then
+		git clone --bare "$_REPO_PATH" /tmp/proj$_A
+	fi
+	git remote add origin /tmp/proj$_A
+	git fetch origin
+	git branch --set-upstream-to=origin/master master
 }
 
 git_remote_add_prologue() {

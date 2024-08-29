@@ -47,7 +47,7 @@ if [[ -n $_TUTR ]]; then
 			_tutr_open $REPLY
 			_tutr_warn echo "Opening $REPLY in your web browser..."
 		else
-			_tutr_warn echo "Failed to find this repo's origin URL!"
+			_tutr_warn echo "Did not find an origin URL!"
 		fi
 	}
 
@@ -306,6 +306,7 @@ ls0_pre() {
 }
 
 ls0_prologue() {
+	[[ -z $_REPO_HTTPS ]] && return
 	cat <<-:
 	I'm opening your repository on $(_GitLab) in a browser tab (if it doesn't
 	come up, browse directly to $(path $_REPO_HTTPS)).
@@ -1268,6 +1269,17 @@ edit_plan_md0_epilogue() {
 
 
 # navigate to ../src;  edit plotter.py & assert `_tutr_file_unstaged plotter.py`
+
+
+fix_plotter_py_rw() {
+	sed -i -e 18,19d "$_REPO/src/plotter.py"
+}
+
+fix_plotter_py_ff() {
+	sed -i -e "17a\\            else:" "$_REPO/src/plotter.py"
+	sed -i -e "18a\\                print(' ', end='')" "$_REPO/src/plotter.py"
+}
+
 fix_plotter_py_prologue() {
 	cat <<-:
 	Do you feel clear about what needs to happen?
@@ -1280,8 +1292,8 @@ fix_plotter_py_prologue() {
 
 	When I began coding, I wasn't aware of how much time I would spend
 	reading.  Reading code, reading books, reading websites; it adds up to a
-	significant part of your workday.  Programmers are $(bld always) reading.  The
-	part where you actually write code... isn't a very big part of your day.
+	significant part of your workday.  Programmers are $(bld always) reading.
+	The part where you actually write code... isn't very big.
 
 	Anyway, we'll talk about this later.  I'll just give you the answer to
 	this problem so you can get a move on.

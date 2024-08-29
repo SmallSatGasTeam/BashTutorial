@@ -159,24 +159,23 @@ typeset -r _GB_BEHIND=2
 #
 # Store the number of commits the current branch is ahead/behind in $REPLY
 _git_branch_status() {
-	git status --branch --porcelain=v1 | {
-		local stat=0 line
-		while IFS=$'\n' read line; do
-			if [[ $line == "## "*...*/* ]]; then
-				if [[ $line = *\[ahead* ]]; then
-					(( stat |= _GB_AHEAD ))
-					REPLY=${line##* }
-					REPLY=${REPLY%']'*}
-				elif [[ $line = *\[behind* ]]; then
-					(( stat |= _GB_BEHIND ))
-					REPLY=${line##* }
-					REPLY=${REPLY%']'*}
-				fi
-				break
-			fi
-		done
-		return $stat
-	}
+    local IFS=$'\n' output line stat=0
+    output=($(git status --branch --porcelain=v1))
+    for line in ${output[@]}; do
+        if [[ $line == "## "*...*/* ]]; then
+            if [[ $line = *\[ahead* ]]; then
+                (( stat |= _GB_AHEAD ))
+                REPLY=${line##* }
+                REPLY=${REPLY%']'*}
+            elif [[ $line = *\[behind* ]]; then
+                (( stat |= _GB_BEHIND ))
+                REPLY=${line##* }
+                REPLY=${REPLY%']'*}
+            fi
+            break
+        fi
+    done
+    return $stat
 }
 
 
