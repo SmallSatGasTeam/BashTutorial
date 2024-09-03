@@ -906,7 +906,7 @@ clear_epilogue() {
 ls_a_prologue() {
 	cat <<-:
 	I wasn't being completely honest with you when I said that there were
-	four files.  There is a stowaway among us.
+	three files.  There is a stowaway among us.
 
 	$(cmd ls) can take an option $(cmd -a) that makes it show $(bld all) files, even hidden ones.
 
