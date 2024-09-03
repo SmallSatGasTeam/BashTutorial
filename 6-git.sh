@@ -705,7 +705,7 @@ cd_into_repo_prologue() {
 }
 
 cd_into_repo_test() {
-	if   [[ $PWD = $_REPO ]]; then return 0
+	if   [[ "$PWD" = "$_REPO" ]]; then return 0
 	elif _tutr_noop; then return $NOOP
 	else _tutr_generic_test -c cd -a $_REPONAME -d "$_REPO"
 	fi
@@ -962,7 +962,7 @@ git_restore_prologue() {
 git_restore_test() {
 	# TODO: handle the case where the user runs `git add README.md`
 	#       and stages their change instead of reverting it
-	if   [[ $PWD != $_REPO ]]; then return $WRONG_PWD
+	if   [[ "$PWD" != "$_REPO" ]]; then return $WRONG_PWD
 	elif [[ -z $(git status --porcelain=v1) ]]; then return 0
 	elif _tutr_noop; then return $NOOP
 	else _tutr_generic_test -c git -a restore -a README.md -d "$_REPO"
@@ -1237,7 +1237,7 @@ git_commit0_prologue() {
 }
 
 git_commit0_test() {
-	if   [[ $PWD != $_REPO ]]; then return $WRONG_PWD
+	if   [[ "$PWD" != "$_REPO" ]]; then return $WRONG_PWD
 	elif _tutr_branch_ahead; then return 0
 	elif _tutr_is_editor; then return $NOOP
 	elif [[ ${_CMD[@]} = 'git status' ]]; then return $NOOP
@@ -1434,7 +1434,7 @@ git_remote_v_prologue() {
 }
 
 git_remote_v_test() {
-	if   [[ $PWD != $_REPO ]]; then return $WRONG_PWD
+	if   [[ "$PWD" != "$_REPO" ]]; then return $WRONG_PWD
 	elif _tutr_noop; then return $NOOP
 	elif [[ ${_CMD[0]} = git && ${_CMD[1]} = help ]]; then return $NOOP
 	elif [[ ${_CMD[0]} = git && ${_CMD[1]} = status ]]; then return $NOOP
@@ -1517,7 +1517,7 @@ git_remote_rename_prologue() {
 
 ## Ensure that a remote called origin no longer exists
 git_remote_rename_test() {
-	if   [[ $PWD != $_REPO ]]; then return $WRONG_PWD
+	if   [[ "$PWD" != "$_REPO" ]]; then return $WRONG_PWD
 	elif _tutr_noop; then return $NOOP
 	fi
 
@@ -1687,7 +1687,7 @@ git_remote_add_prologue() {
 
 git_remote_add_test() {
 	_WRONG_SUBCOMMAND=95
-	if   [[ $PWD != $_REPO ]]; then return $WRONG_PWD
+	if   [[ "$PWD" != "$_REPO" ]]; then return $WRONG_PWD
 	elif _tutr_noop; then return $NOOP
 	elif [[ ${_CMD[0]} = git && ${_CMD[1]} = help ]]; then return $NOOP
 	elif [[ ${_CMD[0]} = git && ${_CMD[1]} = status ]]; then return $NOOP
@@ -1697,27 +1697,50 @@ git_remote_add_test() {
 	elif [[ ${_CMD[0]} = git && ${_CMD[1]} != remote ]]; then return $_WRONG_SUBCOMMAND
 	fi
 
+	_NO_ORIGIN=99
+	_ERIKS_USERNAME=98
+	_ERIKS_REPONAME=97
+	_BAD_ASSN=96
+	_BAD_USERNAME=95
+	_BAD_SLASH=94
+	_BAD_HOST=93
+	_BAD_COURSE=92
 	_HTTPS_URL=91
 	_NOT_SSH_URL=90
+	_LASTNAME_FIRSTNAME=89
+	_AT_SIGN=88
+
 	local URL=$(git remote get-url origin 2>/dev/null)
-	if   [[ -z $URL ]]; then return 99
+	if   [[ -z $URL ]]; then return $_NO_ORIGIN
 	elif [[ $URL =  https:* ]]; then return $_HTTPS_URL
 	elif [[ $URL != git@* ]]; then return $_NOT_SSH_URL
-	elif [[ $URL =  git@gitlab.cs.usu.edu/* ]]; then return 94
-	elif [[ $URL != *gitlab.cs.usu.edu* ]]; then return 93
-	elif [[ $URL =  *:duckiecorp/* ]]; then return 98
-	elif [[ $URL != */cs1440-* ]]; then return 92
-	elif [[ $URL != *-proj$_A && $URL != *-proj$_A.git ]]; then return 96
-	elif [[ $URL =  */$_REPONAME* ]]; then return 97
-	elif [[ $URL =  git@gitlab.cs.usu.edu:*/cs1440-*-proj$_A ||
-		    $URL =  git@gitlab.cs.usu.edu:*/cs1440-*-proj$_A.git ]]; then return 0
-	else _tutr_generic_test -c git -n -d "$_REPO"
+	elif [[ $URL =  git@gitlab.cs.usu.edu/* ]]; then return $_BAD_SLASH
+	elif [[ $URL != *gitlab.cs.usu.edu* ]]; then return $_BAD_HOST
+	elif [[ $URL =  *:duckiecorp/* ]]; then return $_ERIKS_USERNAME
+	elif [[ $URL =  *LASTNAME* || $URL =  *FIRSTNAME* ]]; then return $_LASTNAME_FIRSTNAME
+	elif [[ $URL != */cs1440-* ]]; then return $_BAD_COURSE
+	elif [[ $URL != *-proj$_A && $URL != *-proj$_A.git ]]; then return $_BAD_ASSN
+	elif [[ $URL =  */$_REPONAME* ]]; then return $_ERIKS_REPONAME
+	elif [[ $URL = git@gitlab.cs.usu.edu:@* ]]; then return $_AT_SIGN
+	elif [[ -n $_GL_USERNAME ]]; then
+		if [[ $URL = git@gitlab.cs.usu.edu:$_GL_USERNAME/cs1440-*-proj$_A ||
+		      $URL = git@gitlab.cs.usu.edu:$_GL_USERNAME/cs1440-*-proj$_A.git ]]; then
+			return 0
+		elif [[ $URL != git@gitlab.cs.usu.edu:$_GL_USERNAME* ]]; then
+			return $_BAD_USERNAME
+		fi
+	elif [[ -z $_GL_USERNAME ]]; then
+		if [[ $URL = git@gitlab.cs.usu.edu:*/cs1440-*-proj$_A ||
+		      $URL = git@gitlab.cs.usu.edu:*/cs1440-*-proj$_A.git ]]; then
+		  return 0
+		fi
 	fi
+	_tutr_generic_test -c git -n -d "$_BASE"
 }
 
 git_remote_add_hint() {
 	case $1 in
-		99)
+		$_NO_ORIGIN)
 			cat <<-:
 			There is no $(_remote) called $(_origin).  Create it with
 			  $(cmd git remote add origin NEW_URL).
@@ -1728,7 +1751,7 @@ git_remote_add_hint() {
 			:
 			;;
 
-		98)
+		$_ERIKS_USERNAME)
 			cat <<-:
 			$(_origin) points to the address of MY repo, not YOURS!
 
@@ -1736,18 +1759,73 @@ git_remote_add_hint() {
 			:
 			;;
 
-		97)
+		$_ERIKS_REPONAME)
 			cat <<-:
 			The name you gave your repo is wrong - it still contains MY name.
 
-			Your repository's name should include YOUR name and look like
+			Your repository's name should include YOUR name and look like this:
 			  $(bld cs1440-LASTNAME-FIRSTNAME-proj$_A)
+
+			Also, replace $(cyn LASTNAME-FIRSTNAME) with your $(bld real names)
 
 			Use $(cmd git remote remove origin) to erase this and try again.
 			:
 			;;
 
-		96)
+		$_LASTNAME_FIRSTNAME)
+			cat <<-:
+			Somehow I doubt those are your first and last names.
+
+			Your repository's name should include your $(bld real) name and look like this:
+			  $(bld cs1440-LASTNAME-FIRSTNAME-proj$_A)
+
+			Of course, replace $(cyn LASTNAME-FIRSTNAME) with your $(bld real names).
+
+			Use $(cmd git remote remove origin) to erase it so you can try again.
+			:
+			;;
+
+		$_AT_SIGN)
+			cat <<-:
+			The username you put into the URL contains an "at sign" $(kbd @).
+			Your repo's URL only needs one $(kbd @), which goes near the beginning,
+			like this:
+
+			:
+			if [[ -n $_GL_USERNAME ]]; then
+				cat <<-:
+				$(path git@gitlab.cs.usu.edu:$_GL_USERNAME/cs1440-LASTNAME-FIRSTNAME-proj$_A))
+				:
+			else
+				cat <<-:
+				$(path git@gitlab.cs.usu.edu:USERNAME/cs1440-LASTNAME-FIRSTNAME-proj$_A))
+
+				Of course, replace $(cyn USERNAME) with your $(bld GitLab username).
+				:
+			fi
+
+			cat <<-:
+
+			Use $(cmd git remote remove origin) to erase it and start over.
+			:
+			;;
+
+		$_BAD_USERNAME)
+			cat <<-:
+			You entered the wrong username into the URL.
+
+			Your GitLab username is $(bld $_GL_USERNAME), so the URL should
+			look like this:
+
+			$(path git@gitlab.cs.usu.edu:$_GL_USERNAME/cs1440-LASTNAME-FIRSTNAME-proj$_A))
+
+			Also, replace $(cyn LASTNAME-FIRSTNAME) with your $(bld real names)
+
+			Use $(cmd git remote remove origin) to erase it and start over.
+			:
+			;;
+
+		$_BAD_ASSN)
 			cat <<-:
 			This repository's name must end in $(bld "-proj$_A"), signifying that it
 			is for Project #$_A.
@@ -1756,7 +1834,7 @@ git_remote_add_hint() {
 			:
 			;;
 
-		94)
+		$_BAD_SLASH)
 			cat <<-:
 			This SSH address will not work because there is a slash $(bld "'/'") between the
 			hostname $(ylw gitlab.cs.usu.edu) and your username.  (Use $(cmd git remote -v) to
@@ -1768,7 +1846,7 @@ git_remote_add_hint() {
 			:
 			;;
 
-		93)
+		$_BAD_HOST)
 			cat <<-:
 			The hostname of the URL should be $(ylw gitlab.cs.usu.edu).
 
@@ -1778,7 +1856,7 @@ git_remote_add_hint() {
 			:
 			;;
 
-		92)
+		$_BAD_COURSE)
 			cat <<-:
 			This repository's name must contain the course number $(bld cs1440), followed
 			by a hyphen.  This associates this repo with this course.
