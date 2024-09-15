@@ -3,7 +3,7 @@
 . .lib/shell-compat-test.sh
 
 _DURATION=10
-_LSN_VERSION=1.0.0
+_LSN_VERSION=1.0.1
 
 # Put tutorial library files into $PATH if they are not already added
 if [[ -d "$PWD/.lib" && ":$PATH:" != *":$PWD/.lib:"* ]]; then
@@ -137,10 +137,6 @@ setup() {
 	fi
 
 	export _BASE="$PWD"
-	# Because I can't count on GNU Coreutils realpath(1) or readlink(1) on
-	# all systems, get parent dir's real name the old fashioned way
-	export PARENT="$(cd .. && pwd)"
-	export _REPO_PATH="$PARENT/ssh-key-test"
 }
 
 

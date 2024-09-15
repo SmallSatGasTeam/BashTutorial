@@ -3,7 +3,7 @@
 . .lib/shell-compat-test.sh
 
 _DURATION=40
-_LSN_VERSION=1.0.0
+_LSN_VERSION=1.0.1
 
 # Put tutorial library files into $PATH if they are not already added
 if [[ -d "$PWD/.lib" && ":$PATH:" != *":$PWD/.lib:"* ]]; then
@@ -143,7 +143,7 @@ setup() {
 	export _PARENT="$(cd .. && pwd)"
 	local _LONG="$_PARENT/$_REPONAME_L"
 	local _SHORT="$_PARENT/$_REPONAME"
-	export _REPO="$_SHORT"
+	export _REPO_PATH="$_SHORT"
 
 	# Bail out unless the last lesson was completed AND the starter code
 	# repo exists AND has an 'origin' that DOES NOT point back to my account
@@ -215,8 +215,8 @@ rename_repo_prologue() {
 rename_repo_test() {
 	_TARGET_IS_NOT_GIT_REPO=99
 	_INCORRECT_DEST=98
-	if   [[ -d "$_REPO/.git" ]]; then return 0
-	elif [[ -d "$_REPO" ]]; then return $_TARGET_IS_NOT_GIT_REPO
+	if   [[ -d "$_REPO_PATH/.git" ]]; then return 0
+	elif [[ -d "$_REPO_PATH" ]]; then return $_TARGET_IS_NOT_GIT_REPO
 	elif [[ ${_CMD[0]} == mv && ${_CMD[1]} == *$_SRC && $_RES == 0 ]]; then
 		_SRC=${_CMD[2]}
 		return $_INCORRECT_DEST
@@ -273,13 +273,13 @@ cd_repo_rw() {
 }
 
 cd_repo_ff() {
-	cd "$_REPO"
+	cd "$_REPO_PATH"
 }
 
 cd_repo_prologue() {
 	if [[ $PWD == $_BASE ]]; then
 		cat <<-:
-		Change into the starter code repository at $(path ../$(basename "$_REPO"))
+		Change into the starter code repository at $(path ../$(basename "$_REPO_PATH"))
 		:
 	else
 		cat <<-:
@@ -289,12 +289,12 @@ cd_repo_prologue() {
 }
 
 cd_repo_test() {
-	[[ "$PWD" == "$_REPO" ]] && return 0
+	[[ "$PWD" == "$_REPO_PATH" ]] && return 0
 	return $WRONG_PWD
 }
 
 cd_repo_hint() {
-	_tutr_generic_hint $1 cd "$_REPO"
+	_tutr_generic_hint $1 cd "$_REPO_PATH"
 }
 
 
@@ -326,11 +326,11 @@ ls0_prologue() {
 }
 
 ls0_test() {
-	_tutr_generic_test -c ls -x -d "$_REPO"
+	_tutr_generic_test -c ls -x -d "$_REPO_PATH"
 }
 
 ls0_hint() {
-	_tutr_generic_hint $1 ls "$_REPO"
+	_tutr_generic_hint $1 ls "$_REPO_PATH"
 }
 
 ls0_epilogue() {
@@ -387,11 +387,11 @@ view_GENERIC_test() {
 
 # look at instructions/Project_Requirements.md both in browser and terminal
 view_proj_reqs_rw() {
-	cd "$_REPO"
+	cd "$_REPO_PATH"
 }
 
 view_proj_reqs_ff() {
-	cd "$_REPO/instructions"
+	cd "$_REPO_PATH/instructions"
 }
 
 view_proj_reqs_prologue() {
@@ -403,11 +403,11 @@ view_proj_reqs_prologue() {
 }
 
 view_proj_reqs_test() {
-	view_GENERIC_test "$_REPO/instructions/Project_Requirements.md"
+	view_GENERIC_test "$_REPO_PATH/instructions/Project_Requirements.md"
 }
 
 view_proj_reqs_hint() {
-	_tutr_generic_hint $1 less "$_REPO/instructions"
+	_tutr_generic_hint $1 less "$_REPO_PATH/instructions"
 
 	cat <<-:
 
@@ -433,11 +433,11 @@ view_proj_reqs_epilogue() {
 
 # look at instructions/Markdown.md both in browser and terminal
 view_markdown_md_rw() {
-	cd "$_REPO/instructions"
+	cd "$_REPO_PATH/instructions"
 }
 
 view_markdown_md_ff() {
-	cd "$_REPO/instructions"
+	cd "$_REPO_PATH/instructions"
 }
 
 view_markdown_md_prologue() {
@@ -457,11 +457,11 @@ view_markdown_md_prologue() {
 
 
 view_markdown_md_test() {
-	view_GENERIC_test "$_REPO/instructions/Markdown.md"
+	view_GENERIC_test "$_REPO_PATH/instructions/Markdown.md"
 }
 
 view_markdown_md_hint() {
-	_tutr_generic_hint $1 less "$_REPO/instructions"
+	_tutr_generic_hint $1 less "$_REPO_PATH/instructions"
 
 	cat <<-:
 
@@ -476,11 +476,11 @@ view_markdown_md_hint() {
 # Notice how Markdown features are used in DuckieCorp documentation
 
 view_plan_rw() {
-	cd "$_REPO/instructions"
+	cd "$_REPO_PATH/instructions"
 }
 
 view_plan_ff() {
-	cd "$_REPO/doc"
+	cd "$_REPO_PATH/doc"
 }
 
 view_plan_prologue() {
@@ -497,11 +497,11 @@ view_plan_prologue() {
 }
 
 view_plan_test() {
-	view_GENERIC_test "$_REPO/doc/Plan.md"
+	view_GENERIC_test "$_REPO_PATH/doc/Plan.md"
 }
 
 view_plan_hint() {
-	_tutr_generic_hint $1 less "$_REPO/doc"
+	_tutr_generic_hint $1 less "$_REPO_PATH/doc"
 
 	cat <<-:
 
@@ -523,13 +523,13 @@ view_plan_epilogue() {
 
 
 edit_readme_rw() {
-	git restore "$_REPO/README.md"
-	cd "$_REPO/doc"
+	git restore "$_REPO_PATH/README.md"
+	cd "$_REPO_PATH/doc"
 }
 
 edit_readme_ff() {
-	cd "$_REPO"
-	cat <<-':' > "$_REPO/README.md"
+	cd "$_REPO_PATH"
+	cat <<-':' > "$_REPO_PATH/README.md"
 	# A first level-heading
 
 	## A second level heading
@@ -576,8 +576,8 @@ edit_readme_test() {
 	_UNBALANCED_BACKTICKS=91
 	_UNBALANCED_TILDES=90
 
-	[[ "$PWD" != "$_REPO" ]] && return $WRONG_PWD
-	[[ ! -f "$_REPO/README.md" ]] && _tutr_file_clean README.md && return $_README_MISSING
+	[[ "$PWD" != "$_REPO_PATH" ]] && return $WRONG_PWD
+	[[ ! -f "$_REPO_PATH/README.md" ]] && _tutr_file_clean README.md && return $_README_MISSING
 	_tutr_file_clean README.md && return $_CHANGE
 
 	# what about tabs?
@@ -606,7 +606,7 @@ edit_readme_test() {
 	elif (( tilde_fences % 2 != 0 )); then return $_UNBALANCED_TILDES
 	elif (( ( need_h1 & need_h2 & need_bold & need_blist & need_inline ) == 0)); then return 0
 	elif _tutr_noop; then return $NOOP
-	else _tutr_generic_test -c nano -a README.md -d "$_REPO"
+	else _tutr_generic_test -c nano -a README.md -d "$_REPO_PATH"
 	fi
 }
 
@@ -733,7 +733,7 @@ edit_readme_hint() {
 			;;
 
 		$WRONG_PWD)
-			_tutr_minimal_chdir_hint "$_REPO"
+			_tutr_minimal_chdir_hint "$_REPO_PATH"
 			;;
 
 		$_README_MISSING)
@@ -748,7 +748,7 @@ edit_readme_hint() {
 			;;
 
 		*)
-			_tutr_generic_hint $1 nano "$_REPO"
+			_tutr_generic_hint $1 nano "$_REPO_PATH"
 
 			cat <<-:
 
@@ -804,7 +804,7 @@ push_readme_test() {
 	_ENCOURAGEMENT=96
 	_NEW_COMMIT=$(git rev-parse master)
 
-	[[ "$PWD" != "$_REPO" ]] && return $WRONG_PWD
+	[[ "$PWD" != "$_REPO_PATH" ]] && return $WRONG_PWD
 	_tutr_file_unstaged README.md && return $_UNSTAGED
 	_tutr_file_staged   README.md && return $_STAGED
 	_tutr_branch_ahead            && return $_BRANCH_AHEAD
@@ -837,7 +837,7 @@ push_readme_hint() {
 			;;
 
 		$WRONG_PWD)
-			_tutr_minimal_chdir_hint "$_REPO"
+			_tutr_minimal_chdir_hint "$_REPO_PATH"
 			;;
 
 		*)
@@ -938,11 +938,11 @@ git_log0_prologue() {
 }
 
 git_log0_test() {
-	_tutr_generic_test -c git -a log -d "$_REPO"
+	_tutr_generic_test -c git -a log -d "$_REPO_PATH"
 }
 
 git_log0_hint() {
-	_tutr_generic_hint $1 "git log" "$_REPO"
+	_tutr_generic_hint $1 "git log" "$_REPO_PATH"
 }
 
 
@@ -951,11 +951,11 @@ git_log0_hint() {
 # Remark about line numbers and syntax highlighting in GitLab for
 #   source code files.  GitLab just autodetects this based on filename
 view_plotter_py_rw() {
-	cd "$_REPO"
+	cd "$_REPO_PATH"
 }
 
 view_plotter_py_ff() {
-	cd "$_REPO/src"
+	cd "$_REPO_PATH/src"
 }
 
 view_plotter_py_prologue() {
@@ -975,16 +975,16 @@ view_plotter_py_test() {
 	_CHANGED=99
 	_STAGED=98
 
-	## [[ "$PWD" != "$_REPO/src" ]] && return $WRONG_PWD
+	## [[ "$PWD" != "$_REPO_PATH/src" ]] && return $WRONG_PWD
 	_tutr_file_unstaged src/plotter.py && return $_CHANGED
 	_tutr_file_staged src/plotter.py && return $_STAGED
-	view_GENERIC_test "$_REPO/src/plotter.py"
+	view_GENERIC_test "$_REPO_PATH/src/plotter.py"
 }
 
 view_plotter_py_hint() {
 	case $1 in
 	   ## $WRONG_PWD)
-	   ## 	_tutr_minimal_chdir_hint "$_REPO/src"
+	   ## 	_tutr_minimal_chdir_hint "$_REPO_PATH/src"
 
 	   ## 	cat <<-:
 
@@ -1014,7 +1014,7 @@ view_plotter_py_hint() {
 			:
 			;;
 		*)
-			_tutr_generic_hint $1 less "$_REPO/src"
+			_tutr_generic_hint $1 less "$_REPO_PATH/src"
 			cat <<-:
 
 			Have a look at the program on $(_GitLab) and with $(cmd less plotter.py).
@@ -1047,7 +1047,7 @@ view_plotter_py_epilogue() {
 
 
 run_plotter_py0_prologue() {
-	if [[ "$PWD" != "$_REPO/src" ]]; then
+	if [[ "$PWD" != "$_REPO_PATH/src" ]]; then
 		cat <<-:
 		For this step you $(bld really) need to go into the $(path src) directory.
 
@@ -1064,11 +1064,11 @@ run_plotter_py0_prologue() {
 }
 
 run_plotter_py0_test() {
-	_tutr_generic_test -c $_PY -a plotter.py -d "$_REPO/src"
+	_tutr_generic_test -c $_PY -a plotter.py -d "$_REPO_PATH/src"
 }
 
 run_plotter_py0_hint() {
-	_tutr_generic_hint $1 $_PY "$_REPO/src"
+	_tutr_generic_hint $1 $_PY "$_REPO_PATH/src"
 }
 
 run_plotter_py0_epilogue() {
@@ -1094,7 +1094,7 @@ edit_plan_md0_rw() {
 }
 
 edit_plan_md0_ff() {
-	sed -i -e '/Phase 3: Testing/a\Made an edit for step edit_plan_md0' "$_REPO/doc/Plan.md"
+	sed -i -e '/Phase 3: Testing/a\Made an edit for step edit_plan_md0' "$_REPO_PATH/doc/Plan.md"
 	git commit -am "Automatic commit: phase 3 of doc/Plan.md"
 	git push origin master
 	_COMMIT=$(git rev-parse master)
@@ -1191,7 +1191,7 @@ edit_plan_md0_test() {
 	_ENCOURAGEMENT=96
 	_NEW_COMMIT=$(git rev-parse master)
 
-	[[ "$PWD" != "$_REPO/doc" ]] && return $WRONG_PWD
+	[[ "$PWD" != "$_REPO_PATH/doc" ]] && return $WRONG_PWD
 	if ! _tutr_branch_ahead && [[ $_COMMIT != $_NEW_COMMIT ]]; then
 		_COMMIT=$_NEW_COMMIT
 		return 0
@@ -1234,7 +1234,7 @@ edit_plan_md0_hint() {
 			;;
 
 		$WRONG_PWD)
-			_tutr_minimal_chdir_hint "$_REPO/doc"
+			_tutr_minimal_chdir_hint "$_REPO_PATH/doc"
 			;;
 
 		*)
@@ -1272,12 +1272,12 @@ edit_plan_md0_epilogue() {
 
 
 fix_plotter_py_rw() {
-	sed -i -e 18,19d "$_REPO/src/plotter.py"
+	sed -i -e 18,19d "$_REPO_PATH/src/plotter.py"
 }
 
 fix_plotter_py_ff() {
-	sed -i -e "17a\\            else:" "$_REPO/src/plotter.py"
-	sed -i -e "18a\\                print(' ', end='')" "$_REPO/src/plotter.py"
+	sed -i -e "17a\\            else:" "$_REPO_PATH/src/plotter.py"
+	sed -i -e "18a\\                print(' ', end='')" "$_REPO_PATH/src/plotter.py"
 }
 
 fix_plotter_py_prologue() {
@@ -1322,17 +1322,17 @@ fix_plotter_py_prologue() {
 }
 
 fix_plotter_py_test() {
-	[[ "$PWD" != "$_REPO/src" ]] && return $WRONG_PWD
+	[[ "$PWD" != "$_REPO_PATH/src" ]] && return $WRONG_PWD
 	_tutr_file_unstaged src/plotter.py && return 0
-	_tutr_generic_test -c nano -a plotter.py -d "$_REPO/src"
+	_tutr_generic_test -c nano -a plotter.py -d "$_REPO_PATH/src"
 }
 
 fix_plotter_py_hint() {
 	case $1 in
 		$WRONG_PWD)
-			_tutr_minimal_chdir_hint "$_REPO/src" ;;
+			_tutr_minimal_chdir_hint "$_REPO_PATH/src" ;;
 		*)
-			_tutr_generic_hint $1 nano "$_REPO"
+			_tutr_generic_hint $1 nano "$_REPO_PATH"
 			cat <<-:
 
 			Find this part of $(_py plotter.py), beginning on line 16:
@@ -1368,11 +1368,11 @@ run_plotter_py1_prologue() {
 }
 
 run_plotter_py1_test() {
-	_tutr_generic_test -c $_PY -a plotter.py -d "$_REPO/src"
+	_tutr_generic_test -c $_PY -a plotter.py -d "$_REPO_PATH/src"
 }
 
 run_plotter_py1_hint() {
-	_tutr_generic_hint $1 $_PY "$_REPO"
+	_tutr_generic_hint $1 $_PY "$_REPO_PATH"
 	cat <<-:
 
 	Run $(_py plotter.py) again to test your fix.
@@ -1392,8 +1392,8 @@ run_plotter_py1_epilogue() {
 # git add, git commit; assert `_tutr_file_clean` and `_tutr_branch_ahead`
 # DON'T push it yet...
 commit_plotter_py_ff() {
-	cd "$_REPO/src"
-	sed -i -e "17a\            else:\n                print(' ', end='')\n" "$_REPO/src/plotter.py"
+	cd "$_REPO_PATH/src"
+	sed -i -e "17a\            else:\n                print(' ', end='')\n" "$_REPO_PATH/src/plotter.py"
 	git add plotter.py
 	git commit -m "Automatic commit: fixed src/plotter.py"
 }
@@ -1417,7 +1417,7 @@ commit_plotter_py_test() {
 	_STAGED=98
 	_ENCOURAGEMENT=96
 
-	[[ "$PWD" != "$_REPO/src" ]]       && return $WRONG_PWD
+	[[ "$PWD" != "$_REPO_PATH/src" ]]       && return $WRONG_PWD
 	_tutr_file_unstaged src/plotter.py && return $_UNSTAGED
 	_tutr_file_staged   src/plotter.py && return $_STAGED
 	_tutr_branch_ahead                 && return 0
@@ -1440,7 +1440,7 @@ commit_plotter_py_hint() {
 			;;
 
 		$WRONG_PWD)
-			_tutr_minimal_chdir_hint "$_REPO/src"
+			_tutr_minimal_chdir_hint "$_REPO_PATH/src"
 			;;
 
 		*)
@@ -1466,14 +1466,14 @@ commit_plotter_py_epilogue() {
 # Amend comment in phase 3
 # Add a note under phase 2 that some bugs were found and fixed during testing.
 edit_plan_md1_ff() {
-	cd "$_REPO/doc"
+	cd "$_REPO_PATH/doc"
 	echo "Automatic edit: phase 2 & phase 3, something something, fixed a bug" >> Plan.md
 	git add Plan.md
 	git commit -m "Automatic commit: Updated doc/Plan.md"
 }
 
 edit_plan_md1_rw() {
-	cd "$_REPO/doc"
+	cd "$_REPO_PATH/doc"
 	git reset HEAD~
 	git restore Plan.md
 }
@@ -1512,7 +1512,7 @@ edit_plan_md1_test() {
 	_ENCOURAGEMENT=96
 	_NEW_COMMIT=$(git rev-parse master)
 
-	[[ "$PWD" != "$_REPO/doc" ]] && return $WRONG_PWD
+	[[ "$PWD" != "$_REPO_PATH/doc" ]] && return $WRONG_PWD
 	_tutr_file_clean doc/Plan.md && [[ $_COMMIT == $_NEW_COMMIT ]] && return $_CLEAN
 	_tutr_file_unstaged doc/Plan.md && return $_UNSTAGED
 	_tutr_file_staged   doc/Plan.md && return $_STAGED
@@ -1549,7 +1549,7 @@ edit_plan_md1_hint() {
 			;;
 
 		$WRONG_PWD)
-			_tutr_minimal_chdir_hint "$_REPO/doc"
+			_tutr_minimal_chdir_hint "$_REPO_PATH/doc"
 			;;
 
 		*)
@@ -1582,14 +1582,14 @@ edit_plan_md1_epilogue() {
 
 
 edit_signature_md_ff() {
-	cd "$_REPO/doc"
+	cd "$_REPO_PATH/doc"
 	echo "Automatic edit: Signature.md" >> Signature.md
 	git add Signature.md
 	git commit -m "Automatic commit: Updated doc/Signature.md"
 }
 
 edit_signature_md_rw() {
-	cd "$_REPO/doc"
+	cd "$_REPO_PATH/doc"
 	git reset HEAD~
 	git restore Signature.md
 }
@@ -1630,7 +1630,7 @@ edit_signature_md_test() {
 	_ENCOURAGEMENT=96
 	_NEW_COMMIT=$(git rev-parse master)
 
-	[[ "$PWD" != "$_REPO/doc" ]]    && return $WRONG_PWD
+	[[ "$PWD" != "$_REPO_PATH/doc" ]]    && return $WRONG_PWD
 	_tutr_file_clean doc/Signature.md && [[ $_COMMIT == $_NEW_COMMIT ]] && return $_CLEAN
 	_tutr_file_unstaged doc/Signature.md && return $_UNSTAGED
 	_tutr_file_staged   doc/Signature.md && return $_STAGED
@@ -1641,6 +1641,10 @@ edit_signature_md_test() {
 
 edit_signature_md_hint() {
 	case $1 in
+		$WRONG_PWD)
+			_tutr_minimal_chdir_hint "$_REPO_PATH/doc"
+			;;
+
 		$_CLEAN)
 			cat <<-:
 			Edit $(_md Signature.md), clear out the placeholder text, and make an
@@ -1658,10 +1662,6 @@ edit_signature_md_hint() {
 			Run $(cmd 'git commit -m "..."') to permanently save your changes in the
 			$(_Git) repository.
 			:
-			;;
-
-		$WRONG_PWD)
-			_tutr_minimal_chdir_hint "$_REPO/doc"
 			;;
 
 		*)
@@ -1695,11 +1695,11 @@ git_status_prologue() {
 }
 
 git_status_test() {
-	_tutr_generic_test -c git -a status -d "$_REPO/doc"
+	_tutr_generic_test -c git -a status -d "$_REPO_PATH/doc"
 }
 
 git_status_hint() {
-	_tutr_generic_hint $1 git "$_REPO/doc"
+	_tutr_generic_hint $1 git "$_REPO_PATH/doc"
 	cat <<-:
 
 	Run $(cmd git status) to continue.
@@ -1741,11 +1741,11 @@ git_log1_prologue() {
 }
 
 git_log1_test() {
-	_tutr_generic_test -c git -a log -d "$_REPO/doc"
+	_tutr_generic_test -c git -a log -d "$_REPO_PATH/doc"
 }
 
 git_log1_hint() {
-	_tutr_generic_hint $1 git "$_REPO/doc"
+	_tutr_generic_hint $1 git "$_REPO_PATH/doc"
 }
 
 git_log1_epilogue() {
@@ -1782,11 +1782,11 @@ big_push_prologue() {
 }
 
 big_push_test() {
-	_tutr_generic_test -c git -a push -d "$_REPO/doc"
+	_tutr_generic_test -c git -a push -d "$_REPO_PATH/doc"
 }
 
 big_push_hint() {
-	_tutr_generic_hint $1 git "$_REPO/doc"
+	_tutr_generic_hint $1 git "$_REPO_PATH/doc"
 	cat <<-:
 
 	Run $(cmd git push) to proceed
@@ -1829,7 +1829,7 @@ cd_to_tutorial_ff() {
 }
 
 cd_to_tutorial_rw() {
-	cd "$_REPO"
+	cd "$_REPO_PATH"
 }
 
 cd_to_tutorial_prologue() {
@@ -1935,18 +1935,18 @@ make_certificate_post() {
 
 
 
-# PWD in _BASE && _tutr_file_untracked "$_REPO/doc/certificate.txt"
+# PWD in _BASE && _tutr_file_untracked "$_REPO_PATH/doc/certificate.txt"
 # ${PWD}* = _BASE
 mv_cert_ff() {
-	mv certificate.txt shell-logs.* "$_REPO/doc"
+	mv certificate.txt shell-logs.* "$_REPO_PATH/doc"
 }
 
 mv_cert_rw() {
-	mv "$_REPO/doc/certificate.txt" "$_REPO"/doc/shell-logs.* "$_BASE"
+	mv "$_REPO_PATH/doc/certificate.txt" "$_REPO"/doc/shell-logs.* "$_BASE"
 }
 
 mv_cert_prologue() {
-	_tutr_shortest_path "$_REPO/doc" "$PWD"
+	_tutr_shortest_path "$_REPO_PATH/doc" "$PWD"
 	if [[ -n ${_ARCHIVE[@]} ]]; then
 		cat <<-:
 		The certificate comes in two parts
@@ -1972,15 +1972,15 @@ mv_cert_test() {
 	_LOGS_NOT_MOVED=97
 	_LOGS_MISSING=96
 	[[ -n ${_ARCHIVE[@]}
-		&& -f "$_REPO/doc/${_ARCHIVE[0]}"
-		&& -f "$_REPO/doc/certificate.txt" ]] && return 0
+		&& -f "$_REPO_PATH/doc/${_ARCHIVE[0]}"
+		&& -f "$_REPO_PATH/doc/certificate.txt" ]] && return 0
 	[[ -z ${_ARCHIVE[@]}
-	   && -f "$_REPO/doc/certificate.txt" ]] && return 0
+	   && -f "$_REPO_PATH/doc/certificate.txt" ]] && return 0
 	[[ "$PWD" != "$_BASE" ]] && return $WRONG_PWD
-	[[ ! -f "$_REPO/doc/certificate.txt"
+	[[ ! -f "$_REPO_PATH/doc/certificate.txt"
 		&& ! -f "$_BASE/certificate.txt" ]] && return $_CERT_MISSING
 	[[ -n ${_ARCHIVE[@]}
-		&& ! -f "$_REPO/doc/${_ARCHIVE[0]}"
+		&& ! -f "$_REPO_PATH/doc/${_ARCHIVE[0]}"
 		&& ! -f "$_BASE/${_ARCHIVE[0]}" ]] && return $_LOGS_MISSING
 	_tutr_file_ignored certificate.txt && return $_CERT_NOT_MOVED
 	_tutr_file_ignored ${_ARCHIVE[0]} && return $_LOGS_NOT_MOVED
@@ -2039,7 +2039,7 @@ mv_cert_hint() {
 
 
 cd_to_proj_ff() {
-	cd "$_REPO/doc"
+	cd "$_REPO_PATH/doc"
 }
 
 cd_to_proj_rw() {
@@ -2047,7 +2047,7 @@ cd_to_proj_rw() {
 }
 
 cd_to_proj_prologue() {
-	_tutr_shortest_path "$_REPO/doc" "$PWD"
+	_tutr_shortest_path "$_REPO_PATH/doc" "$PWD"
 	if [[ -n "$REPLY" ]]; then
 		cat <<-:
 		Now, return one last time to the Project #0 repository by $(cmd cd)'ing to
@@ -2061,17 +2061,17 @@ cd_to_proj_prologue() {
 }
 
 cd_to_proj_test() {
-	[[ "$PWD" != "$_REPO/doc" ]] && return $WRONG_PWD
+	[[ "$PWD" != "$_REPO_PATH/doc" ]] && return $WRONG_PWD
 	return 0
 }
 
 cd_to_proj_hint() {
-	_tutr_shortest_path "$_REPO/doc" "$PWD"
+	_tutr_shortest_path "$_REPO_PATH/doc" "$PWD"
 	if [[ -n "$REPLY" ]]; then
 		echo Try running $(cmd cd $REPLY)
 	else
 		cat <<-:
-		You need to be in the directory "$_REPO/doc"
+		You need to be in the directory "$_REPO_PATH/doc"
 
 		If you are already here but are seeing this message, please run
 		$(cmd tutor bug) and send the bug report to $_EMAIL.
@@ -2108,11 +2108,11 @@ push_certificate_test() {
 	_UNTRACKED_ARCHIVE=94
 	_STAGED_ARCHIVE=93
 
-	[[ "$PWD" != "$_REPO/doc" ]] && return $WRONG_PWD
-	[[ ! -f "$_REPO/doc/certificate.txt" ]] && return $_MISSING_CERT
+	[[ "$PWD" != "$_REPO_PATH/doc" ]] && return $WRONG_PWD
+	[[ ! -f "$_REPO_PATH/doc/certificate.txt" ]] && return $_MISSING_CERT
 	_tutr_file_untracked doc/certificate.txt && return $_UNTRACKED_CERT
 	if [[ -n ${_ARCHIVE[@]} ]]; then
-		[[ ! -f "$_REPO/doc/${_ARCHIVE[0]}" ]] && return $_MISSING_ARCHIVE
+		[[ ! -f "$_REPO_PATH/doc/${_ARCHIVE[0]}" ]] && return $_MISSING_ARCHIVE
 		_tutr_file_untracked doc/${_ARCHIVE[0]} && return $_UNTRACKED_ARCHIVE
 		_tutr_file_staged doc/${_ARCHIVE[0]} && return $_STAGED_ARCHIVE
 	fi
@@ -2178,7 +2178,7 @@ push_certificate_hint() {
 			;;
 
 		$WRONG_PWD)
-			_tutr_minimal_chdir_hint "$_REPO/doc"
+			_tutr_minimal_chdir_hint "$_REPO_PATH/doc"
 			;;
 
 		*)

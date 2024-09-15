@@ -3,7 +3,7 @@
 . .lib/shell-compat-test.sh
 
 _DURATION=25
-_LSN_VERSION=1.0.0
+_LSN_VERSION=1.0.1
 
 # Put tutorial library files into $PATH if they are not already added
 if [[ -d "$PWD/.lib" && ":$PATH:" != *":$PWD/.lib:"* ]]; then
@@ -14,7 +14,7 @@ fi
 _A=0
 
 # Name of the starter code repo
-_REPONAME=cs1440-falor-erik-proj$_A
+_REPO_NAME=cs1440-falor-erik-proj$_A
 
 # This function is named `_Git` to avoid clashing with Zsh's `_git`
 _Git() { (( $# == 0 )) && echo $(blu Git) || echo $(blu $*); }
@@ -38,7 +38,7 @@ if [[ -n $_TUTR ]]; then
 	_origin() { (( $# == 0 )) && echo $(red origin) || echo $(red $*); }
 
 	# origin of the starter code repo
-	_SSH_REPO_URL=git@gitlab.cs.usu.edu:duckiecorp/$_REPONAME
+	_SSH_REPO_URL=git@gitlab.cs.usu.edu:duckiecorp/$_REPO_NAME
 
 	# Open the current Git repo's origin web page
 	browse_repo() {
@@ -55,16 +55,16 @@ fi
 
 _repo_warning() {
 	cat <<-:
-	The repository $(path $_REPONAME) already exists in the
+	The repository $(path $_REPO_NAME) already exists in the
 	parent directory.  Because this lesson involves cloning this repository,
 	it should not already exist.
 
 	If you have not yet submitted Project #$_A you may not wish to delete
 	your work.  In that case, it's probably best to not re-run this lesson.
 
-	If you want to start over, use $(cmd rm -rf) to delete $(path $_REPONAME)
+	If you want to start over, use $(cmd rm -rf) to delete $(path $_REPO_NAME)
 	and everything in it.  From here you can run this command:
-	  $(cmd rm -rf ../$_REPONAME)
+	  $(cmd rm -rf ../$_REPO_NAME)
 
 	Otherwise, you can rename the directory with $(cmd "mv OLD NEW").
 	After moving or removing the repository, this lesson can be restarted.
@@ -109,10 +109,10 @@ setup() {
 	# Because I can't count on GNU Coreutils realpath(1) or readlink(1) on
 	# all systems, get parent dir's real name the old fashioned way
 	export _PARENT=$(cd .. && pwd)
-	export _REPO=$_PARENT/$_REPONAME
+	export _REPO_PATH=$_PARENT/$_REPO_NAME
 
 	# Exit if the starter code repo already exists
-	if [[ -d "$_REPO/.git" ]]; then
+	if [[ -d "$_REPO_PATH/.git" ]]; then
 		_tutr_err _repo_warning
 		return 1
 	fi
@@ -588,7 +588,7 @@ git_status1_epilogue() {
 # 	your computer using the `git clone` command.
 
 git_clone_rw() {
-	command rm -rf "$_REPO"
+	command rm -rf "$_REPO_PATH"
 }
 
 git_clone_ff() {
@@ -597,7 +597,7 @@ git_clone_ff() {
 
 git_clone_pre() {
 	# See if the starter code repo already exists
-	if [[ -d "$_REPO/.git" ]]; then
+	if [[ -d "$_REPO_PATH/.git" ]]; then
 		_tutr_err _repo_warning
 		return 1
 	fi
@@ -657,7 +657,7 @@ git_clone_hint() {
 			cat <<-:
 
 			To clone this repo run
-			  $(cmd git clone git@gitlab.cs.usu.edu:duckiecorp/$_REPONAME)
+			  $(cmd git clone git@gitlab.cs.usu.edu:duckiecorp/$_REPO_NAME)
 			:
 		;;
 	esac
@@ -689,13 +689,13 @@ cd_into_repo_rw() {
 }
 
 cd_into_repo_ff() {
-	cd "$_REPO"
+	cd "$_REPO_PATH"
 	_ORIG_URL=$(git remote get-url origin)
 }
 
 cd_into_repo_prologue() {
 	cat <<-:
-	$(cmd git clone) created a new directory called $(path $_REPONAME)
+	$(cmd git clone) created a new directory called $(path $_REPO_NAME)
 	and populated it with files from the internet.
 
 	This directory is a new $(_Git) repository.
@@ -705,18 +705,18 @@ cd_into_repo_prologue() {
 }
 
 cd_into_repo_test() {
-	if   [[ "$PWD" = "$_REPO" ]]; then return 0
+	if   [[ "$PWD" = "$_REPO_PATH" ]]; then return 0
 	elif _tutr_noop; then return $NOOP
-	else _tutr_generic_test -c cd -a $_REPONAME -d "$_REPO"
+	else _tutr_generic_test -c cd -a $_REPO_NAME -d "$_REPO_PATH"
 	fi
 }
 
 cd_into_repo_hint() {
-	_tutr_generic_hint $1 cd "$_REPO"
+	_tutr_generic_hint $1 cd "$_REPO_PATH"
 
 	cat <<-:
 	Enter the new repo with the $(cmd cd) command:
-	  $(cmd cd $_REPONAME)
+	  $(cmd cd $_REPO_NAME)
 	:
 }
 
@@ -745,12 +745,12 @@ git_status2_prologue() {
 
 git_status2_test() {
 	if   _tutr_noop; then return $NOOP
-	else _tutr_generic_test -c git -a status -d "$_REPO"
+	else _tutr_generic_test -c git -a status -d "$_REPO_PATH"
 	fi
 }
 
 git_status2_hint() {
-	_tutr_generic_hint $1 git "$_REPO"
+	_tutr_generic_hint $1 git "$_REPO_PATH"
 
 	cat <<-:
 
@@ -793,17 +793,17 @@ git_status2_epilogue() {
 # Open "README.md" in an editor and change the file in some way.
 # Return to your command shell ask git about the status of your repository.
 edit_readme0_rw() {
-	git restore "$_REPO/README.md"
+	git restore "$_REPO_PATH/README.md"
 }
 
 edit_readme0_ff() {
-	cat <<-: >>  "$_REPO/README.md"
+	cat <<-: >>  "$_REPO_PATH/README.md"
 
 	                                                        ,,,
 	             Kilroy was here                           (o o)
 	----------------------------------------------------ooO-(_)-Ooo-------
 	:
-	sed -i -e 'y/abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ/nopqrstuvwxyzabcdefghijklmNOPQRSTUVWXYZABCDEFGHIJKLM/' "$_REPO/README.md"
+	sed -i -e 'y/abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ/nopqrstuvwxyzabcdefghijklmNOPQRSTUVWXYZABCDEFGHIJKLM/' "$_REPO_PATH/README.md"
 }
 
 # The next step also wants the user to run 'git status'
@@ -834,7 +834,7 @@ edit_readme0_prologue() {
 
 edit_readme0_test() {
 	_README_UNCHANGED=99
-	if   [[ "$PWD" != "$_REPO" ]]; then return $WRONG_PWD
+	if   [[ "$PWD" != "$_REPO_PATH" ]]; then return $WRONG_PWD
 	elif [[ ${_CMD[0]} = git && ${_CMD[1]} = status ]]; then return $NOOP
 	elif _tutr_file_unstaged README.md; then return 0
 	elif ! _tutr_file_changed README.md; then return $_README_UNCHANGED
@@ -849,7 +849,7 @@ edit_readme0_hint() {
 			;;
 
 		$WRONG_PWD)
-			_tutr_minimal_chdir_hint "$_REPO"
+			_tutr_minimal_chdir_hint "$_REPO_PATH"
 			;;
 
 		$_README_UNCHANGED)
@@ -862,7 +862,7 @@ edit_readme0_hint() {
 			;;
 
 		*)
-			_tutr_generic_hint $1 git "$_REPO"
+			_tutr_generic_hint $1 git "$_REPO_PATH"
 			cat <<-:
 
 			Open $(path README.md) in $(cyn Nano), change it and save it.
@@ -873,7 +873,7 @@ edit_readme0_hint() {
 }
 
 edit_readme0_epilogue() {
-	[[ ! -f "$_REPO/README.md" ]] && echo "Not messing around, are we?"
+	[[ ! -f "$_REPO_PATH/README.md" ]] && echo "Not messing around, are we?"
 }
 
 
@@ -885,11 +885,11 @@ git_status3_prologue() {
 }
 
 git_status3_test() {
-	_tutr_generic_test -c git -a status -d "$_REPO"
+	_tutr_generic_test -c git -a status -d "$_REPO_PATH"
 }
 
 git_status3_hint() {
-	_tutr_generic_hint $1 git "$_REPO"
+	_tutr_generic_hint $1 git "$_REPO_PATH"
 	cat <<-:
 
 	Run $(cmd git status) to see what $(_Git) makes of your change to $(path README.md)
@@ -933,17 +933,17 @@ git_status3_epilogue() {
 
 # Use git restore (or checkout) to discard this change
 git_restore_rw() {
-	cat <<-: >>  "$_REPO/README.md"
+	cat <<-: >>  "$_REPO_PATH/README.md"
 
 	                                                        ,,,
 	             Kilroy was here                           (o o)
 	----------------------------------------------------ooO-(_)-Ooo-------
 	:
-	sed -i -e 'y/abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ/nopqrstuvwxyzabcdefghijklmNOPQRSTUVWXYZABCDEFGHIJKLM/' "$_REPO/README.md"
+	sed -i -e 'y/abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ/nopqrstuvwxyzabcdefghijklmNOPQRSTUVWXYZABCDEFGHIJKLM/' "$_REPO_PATH/README.md"
 }
 
 git_restore_ff() {
-	git restore "$_REPO/README.md"
+	git restore "$_REPO_PATH/README.md"
 }
 
 git_restore_prologue() {
@@ -962,15 +962,15 @@ git_restore_prologue() {
 git_restore_test() {
 	# TODO: handle the case where the user runs `git add README.md`
 	#       and stages their change instead of reverting it
-	if   [[ "$PWD" != "$_REPO" ]]; then return $WRONG_PWD
+	if   [[ "$PWD" != "$_REPO_PATH" ]]; then return $WRONG_PWD
 	elif [[ -z $(git status --porcelain=v1) ]]; then return 0
 	elif _tutr_noop; then return $NOOP
-	else _tutr_generic_test -c git -a restore -a README.md -d "$_REPO"
+	else _tutr_generic_test -c git -a restore -a README.md -d "$_REPO_PATH"
 	fi
 }
 
 git_restore_hint() {
-	_tutr_generic_hint $1 git "$_REPO"
+	_tutr_generic_hint $1 git "$_REPO_PATH"
 	cat <<-:
 
 	Use $(cmd git restore) to undo the change you made to $(path README.md).
@@ -997,12 +997,12 @@ git_status4_prologue() {
 
 git_status4_test() {
 	if _tutr_noop; then return $NOOP
-	else _tutr_generic_test -c git -a status -d "$_REPO"
+	else _tutr_generic_test -c git -a status -d "$_REPO_PATH"
 	fi
 }
 
 git_status4_hint() {
-	_tutr_generic_hint $1 git "$_REPO"
+	_tutr_generic_hint $1 git "$_REPO_PATH"
 	cat <<-:
 
 	Run $(cmd git status) to verify that $(path README.md) has been put back to its
@@ -1033,19 +1033,19 @@ git_status4_epilogue() {
 
 # Run `git add` to add `README.md` to your repository.
 git_add0_rw() {
-	git restore --staged "$_REPO/README.md"
-	git restore "$_REPO/README.md"
+	git restore --staged "$_REPO_PATH/README.md"
+	git restore "$_REPO_PATH/README.md"
 }
 
 git_add0_ff() {
-	cat <<-: >>  "$_REPO/README.md"
+	cat <<-: >>  "$_REPO_PATH/README.md"
 
 	                                                        ,,,
 	             Kilroy was here                           (o o)
 	----------------------------------------------------ooO-(_)-Ooo-------
 	:
-	sed -i -e 'y/abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ/nopqrstuvwxyzabcdefghijklmNOPQRSTUVWXYZABCDEFGHIJKLM/' "$_REPO/README.md"
-	git add "$_REPO/README.md"
+	sed -i -e 'y/abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ/nopqrstuvwxyzabcdefghijklmNOPQRSTUVWXYZABCDEFGHIJKLM/' "$_REPO_PATH/README.md"
+	git add "$_REPO_PATH/README.md"
 }
 
 git_add0_prologue() {
@@ -1073,19 +1073,19 @@ git_add0_prologue() {
 git_add0_test() {
 	_README_UNCHANGED=99
 	_README_DELETED=98
-	if   [[ "$PWD" != "$_REPO" ]]; then return $WRONG_PWD
+	if   [[ "$PWD" != "$_REPO_PATH" ]]; then return $WRONG_PWD
 	elif [[ ${_CMD[0]} = git && ${_CMD[1]} = status ]]; then return $NOOP
 	elif _tutr_file_staged README.md; then return 0
-	elif [[ ! -f "$_REPO/README.md" ]]; then return $_README_DELETED
+	elif [[ ! -f "$_REPO_PATH/README.md" ]]; then return $_README_DELETED
 	elif ! _tutr_file_changed README.md; then return $_README_UNCHANGED
-	else _tutr_generic_test -c git -a add -a README.md -d "$_REPO"
+	else _tutr_generic_test -c git -a add -a README.md -d "$_REPO_PATH"
 	fi
 }
 
 git_add0_hint() {
 	case $1 in
 		$WRONG_PWD)
-			_tutr_minimal_chdir_hint "$_REPO"
+			_tutr_minimal_chdir_hint "$_REPO_PATH"
 			;;
 
 		$_README_DELETED)
@@ -1110,7 +1110,7 @@ git_add0_hint() {
 			;;
 
 		*)
-			_tutr_generic_hint $1 git "$_REPO"
+			_tutr_generic_hint $1 git "$_REPO_PATH"
 			cat <<-:
 
 			Now use $(cmd git add README.md).
@@ -1154,11 +1154,11 @@ git_status5_prologue() {
 }
 
 git_status5_test() {
-	_tutr_generic_test -c git -a status -d "$_REPO"
+	_tutr_generic_test -c git -a status -d "$_REPO_PATH"
 }
 
 git_status5_hint() {
-	_tutr_generic_hint $1 git "$_REPO"
+	_tutr_generic_hint $1 git "$_REPO_PATH"
 	echo
 	git_status5_prologue
 }
@@ -1192,8 +1192,8 @@ git_status5_epilogue() {
 #    about this change.
 git_commit0_rw() {
 	git reset --hard HEAD~
-	date >> "$_REPO/README.md"
-	git add "$_REPO/README.md"
+	date >> "$_REPO_PATH/README.md"
+	git add "$_REPO_PATH/README.md"
 }
 
 git_commit0_ff() {
@@ -1237,16 +1237,16 @@ git_commit0_prologue() {
 }
 
 git_commit0_test() {
-	if   [[ "$PWD" != "$_REPO" ]]; then return $WRONG_PWD
+	if   [[ "$PWD" != "$_REPO_PATH" ]]; then return $WRONG_PWD
 	elif _tutr_branch_ahead; then return 0
 	elif _tutr_is_editor; then return $NOOP
 	elif [[ ${_CMD[@]} = 'git status' ]]; then return $NOOP
-	else _tutr_generic_test -c git -a commit -d "$_REPO"
+	else _tutr_generic_test -c git -a commit -d "$_REPO_PATH"
 	fi
 }
 
 git_commit0_hint() {
-	_tutr_generic_hint $1 git "$_REPO"
+	_tutr_generic_hint $1 git "$_REPO_PATH"
 	cat <<-:
 
 	Run this command to make the commit.  Put some thought into your commit
@@ -1299,11 +1299,11 @@ git_log0_prologue() {
 }
 
 git_log0_test() {
-	_tutr_generic_test -i -c git -a log -d "$_REPO"
+	_tutr_generic_test -i -c git -a log -d "$_REPO_PATH"
 }
 
 git_log0_hint() {
-	_tutr_generic_hint $1 git "$_REPO"
+	_tutr_generic_hint $1 git "$_REPO_PATH"
 	cat <<-:
 
 	Run 'git log' now.
@@ -1338,11 +1338,11 @@ git_status6_prologue() {
 }
 
 git_status6_test() {
-	_tutr_generic_test -c git -a status -d "$_REPO"
+	_tutr_generic_test -c git -a status -d "$_REPO_PATH"
 }
 
 git_status6_hint() {
-	_tutr_generic_hint $1 git "$_REPO"
+	_tutr_generic_hint $1 git "$_REPO_PATH"
 	cat <<-:
 
 	Get the status of your repository once more.
@@ -1434,17 +1434,17 @@ git_remote_v_prologue() {
 }
 
 git_remote_v_test() {
-	if   [[ "$PWD" != "$_REPO" ]]; then return $WRONG_PWD
+	if   [[ "$PWD" != "$_REPO_PATH" ]]; then return $WRONG_PWD
 	elif _tutr_noop; then return $NOOP
 	elif [[ ${_CMD[0]} = git && ${_CMD[1]} = help ]]; then return $NOOP
 	elif [[ ${_CMD[0]} = git && ${_CMD[1]} = status ]]; then return $NOOP
 	elif [[ ${_CMD[0]} = git && ${_CMD[1]} = log ]]; then return $NOOP
-	else _tutr_generic_test -c git -a remote -a -v -d "$_REPO"
+	else _tutr_generic_test -c git -a remote -a -v -d "$_REPO_PATH"
 	fi
 }
 
 git_remote_v_hint() {
-	_tutr_generic_hint $1 git "$_REPO"
+	_tutr_generic_hint $1 git "$_REPO_PATH"
 	cat <<-:
 
 	Run $(cmd git remote -v) to see where this repo came from.
@@ -1517,7 +1517,7 @@ git_remote_rename_prologue() {
 
 ## Ensure that a remote called origin no longer exists
 git_remote_rename_test() {
-	if   [[ "$PWD" != "$_REPO" ]]; then return $WRONG_PWD
+	if   [[ "$PWD" != "$_REPO_PATH" ]]; then return $WRONG_PWD
 	elif _tutr_noop; then return $NOOP
 	fi
 
@@ -1532,7 +1532,7 @@ git_remote_rename_test() {
 	elif [[ ${_CMD[0]} = git && ${_CMD[1]} = status ]]; then return $NOOP
 	elif [[ ${_CMD[0]} = git && ${_CMD[1]} = log ]]; then return $NOOP
 	elif [[ ${_CMD[0]} = git && ${_CMD[1]} = remote && ${_CMD[2]} = -v ]]; then return $NOOP
-	else _tutr_generic_test -c git -a remote -a rename -a origin -a old-origin -d "$_REPO"
+	else _tutr_generic_test -c git -a remote -a rename -a origin -a old-origin -d "$_REPO_PATH"
 	fi
 }
 
@@ -1548,7 +1548,7 @@ git_remote_rename_hint() {
 			:
 			;;
 		*)
-			_tutr_generic_hint $1 git "$_REPO"
+			_tutr_generic_hint $1 git "$_REPO_PATH"
 			;;
 	esac
 
@@ -1687,7 +1687,7 @@ git_remote_add_prologue() {
 
 git_remote_add_test() {
 	_WRONG_SUBCOMMAND=95
-	if   [[ "$PWD" != "$_REPO" ]]; then return $WRONG_PWD
+	if   [[ "$PWD" != "$_REPO_PATH" ]]; then return $WRONG_PWD
 	elif _tutr_noop; then return $NOOP
 	elif [[ ${_CMD[0]} = git && ${_CMD[1]} = help ]]; then return $NOOP
 	elif [[ ${_CMD[0]} = git && ${_CMD[1]} = status ]]; then return $NOOP
@@ -1699,7 +1699,7 @@ git_remote_add_test() {
 
 	_NO_ORIGIN=99
 	_ERIKS_USERNAME=98
-	_ERIKS_REPONAME=97
+	_ERIKS_REPO_NAME=97
 	_BAD_ASSN=96
 	_BAD_USERNAME=95
 	_BAD_SLASH=94
@@ -1720,7 +1720,7 @@ git_remote_add_test() {
 	elif [[ $URL =  *LASTNAME* || $URL =  *FIRSTNAME* ]]; then return $_LASTNAME_FIRSTNAME
 	elif [[ $URL != */cs1440-* ]]; then return $_BAD_COURSE
 	elif [[ $URL != *-proj$_A && $URL != *-proj$_A.git ]]; then return $_BAD_ASSN
-	elif [[ $URL =  */$_REPONAME* ]]; then return $_ERIKS_REPONAME
+	elif [[ $URL =  */$_REPO_NAME* ]]; then return $_ERIKS_REPO_NAME
 	elif [[ $URL = git@gitlab.cs.usu.edu:@* ]]; then return $_AT_SIGN
 	elif [[ -n $_GL_USERNAME ]]; then
 		if [[ $URL = git@gitlab.cs.usu.edu:$_GL_USERNAME/cs1440-*-proj$_A ||
@@ -1759,7 +1759,7 @@ git_remote_add_hint() {
 			:
 			;;
 
-		$_ERIKS_REPONAME)
+		$_ERIKS_REPO_NAME)
 			cat <<-:
 			The name you gave your repo is wrong - it still contains MY name.
 
@@ -1895,7 +1895,7 @@ git_remote_add_hint() {
 			:
 			;;
 		*)
-			_tutr_generic_hint $1 git "$_REPO"
+			_tutr_generic_hint $1 git "$_REPO_PATH"
 			;;
 	esac
 	cat <<-:
@@ -1978,7 +1978,7 @@ git_push_all_test() {
 	elif [[ ${_CMD[@]} = 'git remote -v' ]]; then return $NOOP
 	elif (( _RES == 0 )) && [[ ${_CMD[@]} = 'git push'* && ${_CMD[@]} != *'-u'* ]]; then return $_NO_U
 	elif (( _RES == 0 )) && [[ ${_CMD[@]} = 'git push -u origin master' ]]; then return 0
-	else _tutr_generic_test -c git -a push -a -u -a origin -a --all -d "$_REPO"
+	else _tutr_generic_test -c git -a push -a -u -a origin -a --all -d "$_REPO_PATH"
 	fi
 }
 
@@ -2030,7 +2030,7 @@ git_push_all_hint() {
 			;;
 
 		*)
-			_tutr_generic_hint $1 git "$_REPO"
+			_tutr_generic_hint $1 git "$_REPO_PATH"
 			cat <<-:
 
 			Run this command to proceed
