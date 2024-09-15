@@ -1628,13 +1628,20 @@ edit_signature_md_test() {
 	_UNSTAGED=99
 	_STAGED=98
 	_ENCOURAGEMENT=96
+	_HAS_TODO=97
+	_HAS_NOCEMBER=94
 	_NEW_COMMIT=$(git rev-parse master)
 
 	[[ "$PWD" != "$_REPO_PATH/doc" ]]    && return $WRONG_PWD
 	_tutr_file_clean doc/Signature.md && [[ $_COMMIT == $_NEW_COMMIT ]] && return $_CLEAN
+
+	command grep -qEi 'TODO' "$_REPO_PATH/doc/Signature.md" && return $_HAS_TODO
+	command grep -qEi 'Nocember' "$_REPO_PATH/doc/Signature.md" && return $_HAS_NOCEMBER
+
 	_tutr_file_unstaged doc/Signature.md && return $_UNSTAGED
 	_tutr_file_staged   doc/Signature.md && return $_STAGED
 	_tutr_branch_ahead && (( REPLY >= 3 )) && return 0
+	_tutor_noop && return $NOOP
 
 	return $_ENCOURAGEMENT
 }
@@ -1651,6 +1658,23 @@ edit_signature_md_hint() {
 			entry describing your work today.
 			:
 			;;
+
+		$_HAS_TODO)
+			cat <<-:
+			Don't forget to remove the TODO line from $(_md Signature.md).
+			:
+			;;
+
+
+		$_HAS_NOCEMBER)
+			cat <<-:
+			Have you ever heard of a month called $(bld Nocember)?  I didn't think so.
+			What will your boss think when he reads your $(_md Signature.md)?
+
+			Better replace them with something that makes sense.
+			:
+			;;
+
 		$_UNSTAGED)
 			cat <<-:
 			Prepare your changes for commit by running $(cmd git add Signature.md).
