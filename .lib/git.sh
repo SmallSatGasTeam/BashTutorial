@@ -10,8 +10,18 @@
 #
 # These functions worked in Zsh without this chicanery.
 
-
 # Note #1
+# -------
+# _git_branch_status() mutates the global REPLY as a side-effect.
+# This function formerly piped a command into a while loop, which
+# creates a subshell in Bash.  This means that the change to REPLY
+# was lost when the subshell exits.  This did not happen in Zsh.
+#
+# This function has been changed to store the output of `git status` into an
+# array of lines using command substitution with IFS=\n.  The output is now
+# processed with a for loop.
+
+# Note #2
 # -------
 # I want to minimize the number of calls to `git status`.
 #

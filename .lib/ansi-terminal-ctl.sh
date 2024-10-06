@@ -76,7 +76,6 @@ _W="[1;37m"
 wht_() { echo ${_w}$*${_Z} ; }
 wht()  { echo ${_W}$*${_Z} ; }
 
-
 ## Semantic colors
 # Use these functions for common features across all lessons.  This improves
 # consistency, increases readability, and prevents errors.
@@ -86,7 +85,9 @@ path() { echo ${_u}$*${_Z} ; }
 kbd()  { echo ${_m}$*${_Z} ; }
 var()  { echo ${_c}$*${_Z} ; }
 DuckieCorp() { echo ${_Y}DuckieCorp${_z} ; }
-_py() { (( $# == 0 )) && echo $(ylw_ Python) || echo $(ylw_ $*) ; }
+_py()    { (( $# == 0 )) && echo $(grn Python) || echo $(grn $*) ; }
+_shell() { (( $# == 0 )) && echo $(blu shell) || echo $(blu $*) ; }
+_term()  { (( $# == 0 )) && echo $(ylw terminal) || echo $(ylw $*) ; }
 
 ## User defined colors
 # Lesson developers should define functions to simplify coloring and to improve
