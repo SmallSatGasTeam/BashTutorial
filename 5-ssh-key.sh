@@ -261,7 +261,7 @@ ssh_keygen_prologue() {
 ssh_keygen_test() {
 	[[ -n $DEBUG ]] && echo ssh_keygen_test && _tutr_pressenter
 	_KEYGEN_ARG=99
-	if _tutr_ssh_key_is_present; then return 0
+	if _tutr_ssh_key_is_present && [[ $REPLY == *id_rsa ]]; then return 0
 	elif [[ ${_CMD[0]} == ssh && ${_CMD[1]} == -keygen ]]; then return $_KEYGEN_ARG
 	elif [[ ${_CMD[*]} == "ssh-keygen "*"-b"*"-t"* ]]; then
 		_tutr_generic_test -c ssh-keygen -a "-b" -a $_KEYSIZE -a "-t" -a rsa
