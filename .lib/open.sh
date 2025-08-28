@@ -11,7 +11,7 @@ _tutr_open() {
     # All of these redirections are necessary to keep the tutorial
     # from hanging until the spawned program exits.
     # eval is ugly, but needed for WSL's ugly spawning mechanism (ofc)
-    eval "$_OPEN $1 0</dev/null 1>/dev/null 2>/dev/null &"
+    eval "$_OPEN '$1' 0</dev/null 1>/dev/null 2>/dev/null &"
 }
 
 
