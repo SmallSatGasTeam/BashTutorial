@@ -10,7 +10,7 @@
 
 # Default values to ensure Shell Tutor does not get into weird states if 
 # certain configuration values are not present
-_MAINTAINER_EMAIL=erik.falor@usu.edu
+_MAINTAINER_EMAIL=jhessing@gas.usu.edu
 _DEPLOYMENT_NAME="NOT_CONFIGURED"
 
 # Tutor configuration file under .lib/

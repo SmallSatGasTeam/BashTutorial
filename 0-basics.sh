@@ -31,7 +31,13 @@ _make_files() {
 	|_| |_|\\___|_|_|\\___( )    \\_/\\_/ \\___/|_|  |_|\\__,_(_)
 	                    |/
 
-	Welcome to the CS 1440 command shell tutorial!
+	Welcome to the GAS command shell tutorial!
+
+	This tutor has been adapted from the CS1440 Shell Tutor assignment. 
+	Credit it for its creation and design go to Erik Falor, Jaxton Winder
+	and other TAs and CS students who assisted Erik in its design and upkeep.
+	Credit for changes made repurposing this assignment for the GAS team goes
+	to Joshua Hessing.
 
 	It is my hope that this tutorial series helps you to quickly become
 	comfortable in the Unix command line environment.
@@ -303,7 +309,7 @@ tutor_hint_epilogue() {
 
 tutor_bug_prologue() {
 	cat <<-:
-	One of the things that you will learn this semester is that it is very
+	One of the things that you will learn on the team is that it is very
 	difficult to write good, correct code.  This tutorial is no exception.
 
 	I don't want to alarm you, but it is quite likely that you will uncover

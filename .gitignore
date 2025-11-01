@@ -6,3 +6,4 @@ shell-logs.tgz
 *.sw[pon]
 *~
 .logr
+test.sh
