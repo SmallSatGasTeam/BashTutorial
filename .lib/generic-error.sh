@@ -195,7 +195,7 @@ _tutr_minimal_chdir_hint() {
 
 # Decide if the command line was correct by examining the command, args, CWD and exit status
 # This function is useful when the correctness can be determined solely by the form of the command.
-# Some steps should be tested with a custom function that can consider the extenral state of the system
+# Some steps should be tested with a custom function that can consider the external state of the system
 # (i.e. files do/don't exist, file contents, passage of time, etc.)
 #
 # Options:

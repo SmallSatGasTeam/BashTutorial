@@ -22,7 +22,7 @@ if [[ -n $_TUTR ]]; then
 	private() { (( $# == 0 )) && echo $(red private) || echo $(red $*); }
 	username() { (( $# == 0 )) && echo $(mgn username) || echo $(mgn $*) ; }
 	password() { (( $# == 0 )) && echo $(ylw password) || echo $(ylw $*); }
-	_duckie() { (( $# == 0 )) && echo $(ylw DuckieCorp) || echo $(ylw $*) ; }
+	_team() { (( $# == 0 )) && echo $(mgn The GAS Team) || echo $(mgn $*) ; }
 fi
 
 # TODO: rewrite this lesson to prefer an ED25519 key (if possible)
@@ -81,10 +81,10 @@ _tutr_check_ssh_connection() {
 	local msg stat ret
 	msg=$(ssh -o PasswordAuthentication=no -o ConnectTimeout=7 -T git@$_GH 2>&1)
 	stat=$?
-	ret=1
+	ret=0
 
 	case $stat in
-		0)
+		1)
 			# User logged in with SSH key; this lesson can be skipped
 			:
 			;;
@@ -190,7 +190,7 @@ prologue() {
 
 	Your SSH key will serve as both your $(username) and your $(password) when
 	connecting to GitHub from the command line.  This point is very
-	important.  When you begin using Git at $(_duckie), your SSH key will
+	important.  When you begin using Git on $(_team), your SSH key will
 	save you from re-typing your $(password) dozens of times each day.
 
 	Besides enabling you to be more lazy than ever, your SSH key is still

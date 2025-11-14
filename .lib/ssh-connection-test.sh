@@ -222,11 +222,11 @@ _other_problem_msg() {
 #
 # The authenticity of host '...' can't be established
 #   Remove host keys with
-#     $ ssh-keygen -R github.
+#     $ ssh-keygen -R github.com
 #
-# ssh: connect to host github.cs.usu.edu port 22: Connection timed out
+# ssh: connect to host github.com port 22: Connection timed out
 #   (triggered by blocking the host in iptables:
-#     $ sudo iptables -A OUTPUT -o wlan0 -d github.cs.usu.edu -j DROP
+#     $ sudo iptables -A OUTPUT -o wlan0 -d github.com -j DROP
 #   This command removes that rule
 #     $ sudo iptables -D OUTPUT 1
 

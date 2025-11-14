@@ -23,7 +23,6 @@ if [[ -n $_TUTR ]]; then
 	_md() { (( $# == 0 )) && echo $(blu MARKDOWN) || echo $(blu $*) ; }
 	_txt() { (( $# == 0 )) && echo $(ylw TEXT) || echo $(ylw $*); }
 	_code() { (( $# == 0 )) && echo $(cyn code) || echo $(cyn $*); }
-	_duckie() { (( $# == 0 )) && echo $(ylw DuckieCorp) || echo $(ylw $*) ; }
 fi
 
 
@@ -474,7 +473,6 @@ prologue() {
 
 	* Create and edit text files with the $(_nano) editor
 	* Organize files into directories
-	* Follow the $(_duckie) standard project structure
 	* Run unit tests and interpret their results
 	* Write project documentation
 
@@ -1353,125 +1351,6 @@ fix_bug_epilogue() {
 }
 
 
-signature_prologue() {
-	cat <<-:
-	Return to the $(path ../doc) subdirectory to finalize your documentation.
-	Keep a daily log of your software development efforts in a file called
-	$(_md Signature.md).
-
-	The sprint signature file is composed of brief, dated entries describing
-	what you did each day.  A one line description per day is plenty.
-
-	Open and save this file in $(_nano), as usual.
-
-	  * Create a new entry for today's work, with the date and time spent
-	  * Delete all of the phony $(bld Nocemeber) entries; they are just examples
-	  * Remove the entire line containing the $(bld TODO) message
-	:
-}
-
-signature_test() {
-	_MISSING=99
-	_NOCEMBER=98
-	_GOTO_DOC=97
-	_TODO=96
-    _TOTAL=95
-
-	if   _tutr_noop cd pushd popd; then return $NOOP
-	elif [[ $PWD = "$_BASE" ]]; then return $_GOTO_DOC
-	elif [[ $PWD != "$_BASE/doc" ]]; then return $WRONG_PWD
-	elif [[ ! -f "$_BASE/doc/Signature.md" ]]; then return $_MISSING
-	elif grep -iqw "Nocember" "$_BASE/doc/Signature.md" >/dev/null; then return $_NOCEMBER
-	elif grep -iqw "TODO" "$_BASE/doc/Signature.md" >/dev/null; then return $_TODO
-    elif ! grep -iqw "TOTAL" "$_BASE/doc/Signature.md" >/dev/null; then return $_TOTAL
-	elif [[ $(git hash-object "$_BASE/doc/Signature.md") != $SIG_HSH ]]; then return 0
-	else _tutr_generic_test -c nano -a Signature.md -d "$_BASE/doc"
-	fi
-}
-
-signature_hint() {
-	case $1 in
-        $_TOTAL)
-			cat <<-:
-			$(_md Signature.md) doesn't show your $(bld TOTAL) time investment!
-
-			Please add that back into the file.
-			:
-			;;
-
-		$_NOCEMBER)
-			cat <<-:
-			$(_md Signature.md) still contains placeholder entries that refer to the made-up
-			month $(bld Nocember).  Those should not be in your final submission.
-
-			Please remove these now.
-			:
-			;;
-
-		$_TODO)
-			cat <<-:
-			The $(bld TODO) note is still at the top of $(_md Signature.md).  It is pretty
-			unprofessional to leave TODO's in products that you intend to turn in
-			to somebody else.
-
-			Please get rid of it.
-			:
-			;;
-
-		$_MISSING)
-			cat <<-:
-			$(_md Signature.md) is missing from $(path doc/)!
-
-			You need to write something!
-
-			Move it back here, or make a new one from scratch.
-			:
-			;;
-
-		$_GOTO_DOC)
-			cat <<-:
-			Go into the $(path doc/) subdirectory of this lesson to proceed.
-
-			When you get there, $(_md Signature.md) with $(cmd nano).
-			:
-			;;
-
-		*)
-			_tutr_generic_hint $1 nano "$_BASE/doc"
-			;;
-	esac
-
-	cat <<-:
-
-	Write a brief description of your work on this project in $(_md Signature.md).
-	Include today's date in your write-up.  Remove the placeholder entries
-	as well as the $(bld TODO) note at the top.
-	:
-}
-
-signature_epilogue() {
-	cat <<-:
-	Good job!
-
-	This is the workflow that $(_duckie) programmers follow:
-
-	  * Set up your work environment
-	  * Run tests
-	  * Locate bugs
-	  * Plan and document the fix
-	  * Perform the fix
-	  * Re-run tests to see that the bug is truly squashed and to ensure
-	    no new bugs were introduced
-	  * Update the project's documentation
-
-	The importance of maintaining up-to-date documentation cannot be
-	overemphasized.
-
-	:
-	_tutr_pressenter
-}
-
-
 epilogue() {
 	cat <<-EPILOGUE
 	Way to go!  You're almost done!  Do you feel smarter yet?
@@ -1481,9 +1360,7 @@ epilogue() {
 
 	* Create and edit text files with the $(_nano) editor
 	* Organize files into directories
-	* Follow the $(_duckie) standard project structure
 	* Run unit tests and interpret their results
-	* Write project documentation
 
                                    $(blk ASCII art credit: Veronica Karlsson)
 	EPILOGUE
@@ -1507,9 +1384,6 @@ source main.sh && _tutr_begin \
 	cd_into_src \
 	run_tests \
 	nano_main_py \
-	edit_plan \
 	fix_bug \
-	signature \
-
 
 # vim: set filetype=sh noexpandtab tabstop=4 shiftwidth=4 textwidth=76 colorcolumn=76:

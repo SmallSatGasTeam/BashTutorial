@@ -1374,18 +1374,17 @@ git_status6_epilogue() {
 # 17. View configured remotes
 git_remote_v_prologue() {
 	cat <<-:
-
 	Your $(_local local repository) is a clone of the
-	official GAS Shell-Tutor repo. With this new commit,
-	your local repo has diverged from ($_remote the original).
+	$(blu official GASRATS-Demo) repo. With this new commit,
+	your local repo has diverged from $(_remote the original).
 	The next commands I teach you will let you merge these
 	divergent repositories back into harmony. Although it is
 	possible to have a repo maintained completely locally, usually
 	you have some database off your machine where the repo is
 	saved. This is what allows us to use Git to share work between
 	machines.
-
 	:
+	
 
 	_tutr_pressenter
 
@@ -1407,7 +1406,7 @@ git_remote_v_prologue() {
 
 	cat <<-:
 
-	When you ran `git clone` you downloaded this repository from
+	When you ran $(cmd git clone) you downloaded this repository from
 	the GitHub database where it was stored. I will now teach you how to
 	modify the location of your remote using the $(cmd git remote) subcommand.
 
@@ -1493,7 +1492,7 @@ git_remote_rename_prologue() {
 	URL.  It is a custom in $(_Git) to use $(_origin) for the URL that you use
 	most often.  Your repo's $(_origin) should point to $(cyn your own) GitHub account.
 
-	Before you make $(_origin) point to your account, first "save" the original
+	Before you make $(_origin) point to your account, firtestst "save" the original
 	URL with the nickname $(_remote old-origin).
 
 	This form of $(cmd git remote) renames a $(_remote) repository's nickname:
@@ -1651,8 +1650,8 @@ git_remote_add_prologue() {
 	When entering the URL, it is very important that you NOT change:
 
 	  * Punctuation, such as slashes $(ylw /) and colons $(ylw :)
-	  * $(ylw git@github.com)
-	  * $(ylw demo)
+	  * $(ylw git@github.com:)
+	  * $(ylw /LASTNAME-FIRSTNAME-demo)
 
 	When students get those wrong, we cannot locate their submission on the
 	GitHub server (there are $(bld thousands) of them).
@@ -1698,7 +1697,6 @@ git_remote_add_test() {
 	_LASTNAME_FIRSTNAME=89
 	_AT_SIGN=88
 
-	https://github.com/SmallSatGasTeam/GASRATS-Demo
 	local URL=$(git remote get-url origin 2>/dev/null)
 	if   [[ -z $URL ]]; then return $_NO_ORIGIN
 	elif [[ $URL =  https:* ]]; then return $_HTTPS_URL
@@ -1912,8 +1910,9 @@ install_gh_prologue() {
 
 install_gh_test() {
 	if   [[ ${_CMD[@]} = *'help'* ]]; then return $NOOP
-	elif (( _RES == 0 )) && [[ ${_CMD[@]} = 'sudo apt install gh' ]]; then return 0
+	# elif (( _RES == 0 )) && [[ ${_CMD[@]} = 'sudo apt install gh' ]]; then return 0
 	fi
+	_tutr_generic_test -c sudo -a apt -a install -a gh
 }
 
 install_gh_hint() {
@@ -1961,7 +1960,7 @@ gh_repo_create_prologue() {
 	Now we can use the GitHub CLI tools to create your repo!
 
 	Try running this command:
-		$(cmd gh repo create LASTNAME-FIRSTNAME-demo --private -s .)
+		$(cmd gh repo create --private -s . LASTNAME-FIRSTNAME-demo)
 
 	Replace LASTNAME-FIRSTNAME with your own name
 	:
@@ -1972,6 +1971,7 @@ gh_repo_create_test() {
 	if   [[ ${_CMD[@]} = *'help'* ]]; then return $NOOP
 	elif (( _RES == 0 )) && [[ ${_CMD[@]} = 'gh repo create '*'-demo --private -s .' ]]; then return 0
 	fi
+	_tutr_generic_test -c gh -a repo -a create -a --private -a -s -a . -xi
 }
 
 gh_repo_create_epilogue() {
@@ -2162,10 +2162,9 @@ epilogue() {
 	* Check the status of your repository
 	* Change a file and commit it to the repository
 	* View the Git log
-	* Submit your homework to GitHub
+	* Push to GitHub
 
-	$(bld "Don't do anything with the repo that you just cloned and pushed;")
-	$(bld you need it for the last lesson.)
+	$(bld CONGRATULATIONS! YOU FINISHED THE SHELL-TUTORIAL!)
 
 	      $(blk ASCII art credit: Christopher Johnson, Fog \& Veronica Karlsson)
 	EPILOGUE
