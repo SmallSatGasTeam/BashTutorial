@@ -1296,8 +1296,7 @@ command_not_found_prologue() {
 	At other times the program $(bld is) installed, but the $(_shell) cannot find it.
 
 	If you're like me you make $(bld lots) of typing mistakes.  This is the source
-	of 99% of my own "$(_err command not found)" errors.  You'll see me misspell
-	$(cmd python) as $(mgn pyhton) in nearly every lecture.
+	of 99% of my own "$(_err command not found)" errors.
 
 	Better start getting used to it.  Try running $(cmd pyhton) (or some other
 	misspelled command of your own creation) and see what the $(_shell) has to

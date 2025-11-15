@@ -70,7 +70,7 @@ _repo_warning() {
 	After moving or removing the repository, this lesson can be restarted.
 
 	If you are just looking for a quick refresher, please refer to the
-	$(_Git) instructions in the online lecture notes.
+	$(_Git) instructions online at https://github.com/SmallSatGasTeam/GASNotes/blob/main/Git%20Commands.md.
 	:
 }
 
