@@ -768,14 +768,14 @@ git_status2_epilogue() {
 
 	Let me explain what this message is telling you.
 
-	$(bld On branch master)
-	  This message reminds you that you are working on the 'master' (A.K.A.
+	$(bld On branch main)
+	  This message reminds you that you are working on the 'main' (A.K.A.
 	  default) branch.  For the time being all of your work will be on this
 	  branch.  You'll learn more about branches later in the semester.
 
-	$(bld "Your branch is up to date with 'origin/master'.")
-	  The files in the 'master' branch of this $(_local local repo) are the same
-	  as the files on the $(_remote "remote repo's") 'master' branch.  $(_Git) doesn't
+	$(bld "Your branch is up to date with 'origin/main'.")
+	  The files in the 'main' branch of this $(_local local repo) are the same
+	  as the files on the $(_remote "remote repo's") 'main' branch.  $(_Git) doesn't
 	  automatically go out to the internet to check, though; this
 	  information was up-to-date as of your $(cmd git clone) command.
 
@@ -903,11 +903,11 @@ git_status3_epilogue() {
 
 	You will see this message a lot, so you had better know what it means.
 
-	$(bld On branch master)
-	  You are still on the master branch.
+	$(bld On branch main)
+	  You are still on the main branch.
 
-	$(bld Your branch is up to date with $(_remote "'origin/master'"))
-	  The $(_local "local repo's") master branch is not different from the master branch
+	$(bld Your branch is up to date with $(_remote "'origin/main'"))
+	  The $(_local "local repo's") main branch is not different from the main branch
 	  on the $(_remote remote repo) named $(_origin).  The $(_origin) repo is the one you
 	  cloned from.
 
@@ -1356,7 +1356,7 @@ git_status6_epilogue() {
 	cat <<-:
 	Notice $(_Git "Git's") new remark within the familiar $(bld clean) repository message:
 
-	  $(bld Your branch is ahead of $(_remote "'origin/master'") by 1 commit.)
+	  $(bld Your branch is ahead of $(_remote "'origin/main'") by 1 commit.)
 	  $(bld "  (use ")$(cmd '"git push"') $(bld 'to publish your local commits)')
 
 	This is saying that the $(_local local repo) has diverged from the $(_remote remote repo),
@@ -1602,7 +1602,7 @@ git_remote_add_ff() {
 	fi
 	git remote add origin /tmp/proj$_A
 	git fetch origin
-	git branch --set-upstream-to=origin/master master
+	git branch --set-upstream-to=origin/main main
 }
 
 git_remote_add_prologue() {
@@ -1987,7 +1987,7 @@ gh_repo_create_epilogue() {
 # There is no good way to rewind this action
 # git_push_all_rw() { }
 git_push_all_ff() {
-	git push -u origin master
+	git push -u origin main
 	# don't leave the cheat in the global .gitconfig
 	git config --global --unset user.name
 	git config --global --unset user.email
@@ -2041,7 +2041,7 @@ git_push_all_test() {
 	elif [[ ${_CMD[@]} = 'git remote' ]]; then return $NOOP
 	elif [[ ${_CMD[@]} = 'git remote -v' ]]; then return $NOOP
 	elif (( _RES == 0 )) && [[ ${_CMD[@]} = 'git push'* && ${_CMD[@]} != *'-u'* ]]; then return $_NO_U
-	elif (( _RES == 0 )) && [[ ${_CMD[@]} = 'git push -u origin master' ]]; then return 0
+	elif (( _RES == 0 )) && [[ ${_CMD[@]} = 'git push -u origin main' ]]; then return 0
 	else _tutr_generic_test -c git -a push -a -u -a origin -a --all -d "$_REPO_PATH"
 	fi
 }
