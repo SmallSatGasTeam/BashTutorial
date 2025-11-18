@@ -657,7 +657,7 @@ git_clone_hint() {
 			cat <<-:
 
 			To clone this repo run
-			  $(cmd git clone git@github.com/SmallSatGasTeam/$_REPO_NAME)
+			  $(cmd git clone $_SSH_REPO_URL)
 			:
 		;;
 	esac
@@ -1906,7 +1906,6 @@ install_gh_prologue() {
 
 install_gh_test() {
 	if   [[ ${_CMD[@]} = *'help'* ]]; then return $NOOP
-	# elif (( _RES == 0 )) && [[ ${_CMD[@]} = 'sudo apt install gh' ]]; then return 0
 	fi
 	_tutr_generic_test -c sudo -a apt -a install -a gh
 }
@@ -1936,17 +1935,22 @@ authenticate_gh_prologue() {
 	or the github enterprise server. You want to login in to
 	github.com. After you select $(ylw github.com), you should be redirected
 	to your default browser to login to $(cyn GitHub).
-
-	$(blu Note:) If you've already authenticated $(cyn GitHub) before,
-	then you can use the command $(cmd skip) to move on.
 	:
+	_tutr_pressenter
 }
 
 authenticate_gh_test() {
 	if   [[ ${_CMD[@]} = *'help'* ]]; then return $NOOP
-	elif (( _RES == 0 )) && [[ ${_CMD[@]} = 'skip' ]]; then return 0
 	fi
 	_tutr_generic_test -c gh -a auth -a login
+}
+
+authenticate_gh_epilogue() {
+	cat <<-:
+	$(ylw CONGRATULATIONS!!!) You've succesfully setup the $(cyn GitHub)
+	CLI tools. Now you're ready to create your own repository!
+	:
+	_tutr_pressenter
 }
 
 gh_repo_create_prologue() {
@@ -2207,6 +2211,7 @@ source main.sh && _tutr_begin \
 	git_remote_rename \
 	git_remote_add \
 	install_gh \
+	authenticate_gh \
 	gh_repo_create \
 	git_push_all \
 
