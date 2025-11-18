@@ -1927,16 +1927,26 @@ install_gh_epilogue() {
 
 authenticate_gh_prologue() {
 	cat <<-:
-	When using GitHubs CLI tools, you have to be authenticated
-	so GitHub knows who is doing what on their servers. You can
-	run this command to authenticate your GitHub tools:
+	When using $(cyn GitHub\'s) $(red CLI tools), you have to be authenticated
+	so $(cyn GitHub) knows who is doing what on their servers. You can
+	run this command to authenticate your $(cyn GitHub) tools:
 		$(cmd gh auth login)
 	
-	The program will then ask if you want to login in to github.com
+	The program will then ask if you want to $(blu login) in to $(ylw github.com)
 	or the github enterprise server. You want to login in to
-	github.com. After you select github.com you should be brought to
+	github.com. After you select $(ylw github.com), you should be redirected
+	to your default browser to login to $(cyn GitHub).
 
+	$(blu Note:) If you've already authenticated $(cyn GitHub) before,
+	then you can use the command $(cmd skip) to move on.
 	:
+}
+
+authenticate_gh_test() {
+	if   [[ ${_CMD[@]} = *'help'* ]]; then return $NOOP
+	elif (( _RES == 0 )) && [[ ${_CMD[@]} = 'skip' ]]; then return 0
+	fi
+	_tutr_generic_test -c gh -a auth -a login
 }
 
 gh_repo_create_prologue() {
